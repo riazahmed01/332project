@@ -1,0 +1,121 @@
+:root {
+    --footer-background-color: black;
+
+    --footer-text-color: white;
+
+    --footer-font-title-size: 25px;
+    --footer-font-title-color: white;
+    --footer-font-item-size: 15px;
+    --footer-font-item-color: white;
+
+}
+
+/* Everything in the footer should have the same background and text color  */
+footer, footer * 
+{
+    background-color: var(--footer-background-color);
+    color: var(--footer-text-color);
+}
+
+/* place footer at the bottom */
+footer
+{
+    margin-top: auto;
+}
+
+/* main footer container */
+#footer
+{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Target each div */
+.footer-container
+{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+/* Target each div title h3 */
+.footer-container-title
+{
+    font-size: var(--footer-font-title-size);
+    color: var(--footer-font-title-color);
+    margin-bottom: 0;
+    letter-spacing: 0.15em;
+}
+
+.footer-list
+{
+    padding: 0;
+    list-style: none;
+    letter-spacing: 0.05em;
+}
+
+.footer-list-item
+{
+    margin: 0;
+    padding: 5px;
+    font-size: var(--footer-font-item-size);
+}
+
+.footer-contact-info
+{
+    color: var(--footer-font-item-color);
+    font-size: var(--footer-font-item-size);
+}
+
+/* credit msg */
+#credits
+{
+    padding: 0;
+    text-align: center;
+    padding-bottom: 50px;
+    letter-spacing: 0.15em;
+}
+
+@media screen and (max-width:1052px)
+{
+    .footer-container
+    {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+
+@media screen and (max-width:725px)
+{
+    .footer-container
+    {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+}
+
+@media screen and (max-width:630px)
+{
+    #footer
+    {
+        justify-content: space-between;
+    }
+}
+
+@media screen and (max-width:580px)
+{
+    :root {
+        --footer-font-title-size: 30px;
+        --footer-font-item-size: 20px;
+
+    }
+
+    #footer
+    {
+        display: block;
+        text-align: center;
+    }
+}
