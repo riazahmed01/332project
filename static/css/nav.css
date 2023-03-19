@@ -1,15 +1,26 @@
-nav{
+.navbar{
     background-color: black;
+    size: 40px;
+    display: flex;
+    justify-content: center;
 }
-
 a{
-    text-decoration: none;
     color: white;
-    font-size: 2em;
+    text-decoration: none;
 }
-
 a:hover {
     color: grey; 
     text-decoration:none; 
     cursor:pointer;  
+}
+.navbar .nav_right{
+    font-size: 15px;
+    justify-content: right;
+}
+
+.navbar .nav_left{
+    font-size: 28px;
+    justify-content: left;
+    padding: 10px;
+    margin-top: 10px;
 }
