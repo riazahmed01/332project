@@ -34,6 +34,11 @@ def login():
 def user():
     return render_template("user.html")
 
+# route user page
+@app.route("/product/")
+def product():
+    return render_template("product.html")
+
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)
