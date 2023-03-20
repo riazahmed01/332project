@@ -29,6 +29,11 @@ def cart():
 def login():
     return render_template("login.html")
 
+# route product page
+@app.route("/product/")
+def product():
+    return render_template("product.html")
+
 # route user page
 @app.route("/user/")
 def user():
