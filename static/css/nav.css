@@ -1,8 +1,8 @@
 .navbar{
     background-color: black;
-    size: 40px;
     display: flex;
     justify-content: center;
+    justify-self: center;
 }
 a{
     color: white;
@@ -13,12 +13,12 @@ a:hover {
     text-decoration:none; 
     cursor:pointer;  
 }
-.navbar .nav_right{
+.nav_right{
     font-size: 15px;
     justify-content: right;
 }
 
-.navbar .nav_left{
+.nav_left{
     font-size: 28px;
     justify-content: left;
     padding: 10px;
