@@ -13,6 +13,45 @@
 <!--main content of the page-->
 {% block content %}
 
-    <h1>log in page 665755</h1>
+<!DOCTYPE html>
+
+<head>
+    <title>Login page</title>
+</head>
+<body>
+    <h1> </h1>
+    <h1>Login</h1>
+    <form action="">
+        <!-- Headings -->
+        <div class="headingsContainer">
+            <p>Sign in with your username and password</p>
+        </div>
+
+        <!-- Main container -->
+        <div class="mainContainer">
+            <label for="username">Username</label>
+            <input type="text" placeholder="Enter Username" name="username" required>
+
+            <br><br>
+
+            <label for="pswrd">Password</label>
+            <input type="password" placeholder="Enter Password" name="pswrd" required>
+
+            <br>
+
+            <!-- Submit -->
+             <button type="submit">Login</button>
+
+            <!-- Sign up -->
+            <p class="register">Not a member?  <a href="#">Register here!</a></p>
+        </div>
+
+    </form>
+</body>
+</html>
+
+
     
 {% endblock %}
+
+
