@@ -44,6 +44,11 @@ def product():
 def user():
     return render_template("user.html")
 
+# route employee page
+@app.route("/employee/")
+def employee():
+    return render_template("employee.html")
+
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)
