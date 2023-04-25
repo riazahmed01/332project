@@ -2,7 +2,7 @@
 
 <!--links-->
 {% block links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}" alt="product">
 {% endblock links %}
 
 <!--title of the page-->
@@ -14,7 +14,7 @@
 {% block content %}
 <div class="product">
     <div class="img">
-        <img src="{{ url_for('static', filename='assets/image.jpg') }}">
+        <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
     </div>
     <div class="detail">
         <h1 class="title">Product Name</h1>
@@ -45,24 +45,20 @@
                     <div class="days">10 days ago</div>
                 </div>
             </div>
-            <div class="comment-post">I hate this shit so much</div>
+            <div class="comment-post">I like this so much</div>
         </div>
         <div class="list">
             <div class="user">
-                <div class="user-image"><image src="{{ url_for('static', filename='assets/image.jpg') }}" alt="user"></div>
+                <div class="user-image"><image src="{{ url_for('static', filename='assets/user.jpg') }}" alt="user"></div>
                 <div class="user-meta">
-                    <div class="name">CR7</div>
+                    <div class="name">Cristina Aguilera</div>
                     <div class="days">1 month ago</div>
                 </div>
             </div>
-            <div class="comment-post">SIUUUUUUU!!</div>
+            <div class="comment-post">The price does worth it!!</div>
         </div>
     </div>
     <div class="comment-box">
-        <div class="user">
-            <div class="image"><image src="{{ url_for('static', filename='assets/user.jpg') }}" alt="user"></div>
-            <div class="name">Your mom</div>
-        </div>
         <form action="" method="post">
             <div class="username">
                 <label for="username">Name</label>
