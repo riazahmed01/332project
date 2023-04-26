@@ -28,6 +28,16 @@
   padding: 10px 0px;
   color: black;
 }
+.product_desc a{
+  font-size: 24px;
+  padding: 10px 0px;
+  color: black;
+}
+.product_desc a:hover{
+  color: grey; 
+  text-decoration:none; 
+  cursor:pointer;
+}
 .product_desc h4{
   font-size: 24px;
   padding: 10px 0px;
