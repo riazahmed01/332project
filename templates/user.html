@@ -19,10 +19,10 @@
             <div class="user-information">
               <img src="{{ url_for('static', filename='assets/user.jpg') }}">
                 <ul>
-                    <li>Name: name</li>
-                    <li>Email: Username@gmail.com</li>
-                    <li>Phone Number: 123-456-7890</li>
-                    <li>Shipping Address: 78 No Where Ave Apt#89A</li>
+                    <li>Name: {{ current_user.f_name }} {{ current_user.l_name }}</li>
+                    <li>Email: {{ current_user.email }}</li>
+                    <li>Phone Number: {{ current_user.phone_number }}</li>
+                    <li>Shipping Address: {{ current_user.address }}</li>
                 </ul>
             </div>
             <div class="order-information">
