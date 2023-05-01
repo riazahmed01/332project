@@ -162,7 +162,7 @@ def product():
         except:
             return "Comment was longer than 300 characters"
     else:
-        texts = Comments.query.order_by(Comments.date_created)
+        texts = Comments.query.order_by(Comments.date_registered)
         return render_template("product.html", texts = texts)
 # route user page
 @app.route("/user/")
