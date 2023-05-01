@@ -21,7 +21,7 @@ db = SQLAlchemy(app)
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(300), nullable=False)
-    date_registered = db.Column(db.Date, default=datetime.date.today())
+    date_registered = db.Column(db.Date, default=datetime.date.today()) 
     def __repr__(self):
         return '<Name %r>' %self.id
     
@@ -165,18 +165,47 @@ def product():
         texts = Comments.query.order_by(Comments.date_registered)
         return render_template("product.html", texts = texts)
 # route user page
-@app.route("/user/")
+@app.route("/user/", methods=['POST','GET'])
 @login_required
 def user():    
     if current_user.user_type == "CU":
+        if request.method == 'POST':
+            new_email = request.form['email']
+            new_password1 = request.form['password1']
+            new_password2 = request.form['password2']
+            new_address = request.form['address']
+            new_phonenumber = request.form['phone']
+            if new_email:
+                if len(new_email) < 4:
+                    return 'Email must be at least 3 characters'
+                else: current_user.email = new_email
+            if new_password1 and new_password2:
+                if (new_password1 != new_password2):
+                    return 'Passwords do not match'
+                elif len(new_password1) < 8:
+                    return 'Password must be at least 8 characters'
+                else: current_user.password = new_password1
+            if new_address:
+                current_user.address = new_address
+            if new_phonenumber:
+                if len(new_phonenumber) > 10:
+                    return 'Invalid format of phone number'
+                else: current_user.phone_number = new_phonenumber
+            try:
+               db.session.commit()
+               return "Information updated succesfully"
+            except:
+                return "Something went wrong. Try again!"
+        else:
             # display page for regular customers
-       return render_template("user.html")
+            return render_template("user.html", user=current_user)
+        
     elif current_user.user_type == "EMPLY":
             # display page for admin users
-        return render_template("employee.html")
+        return render_template("employee.html", user=current_user)
     elif current_user.user_type == "SU":
             # display page for admin users
-        return render_template("superuser.html")
+        return render_template("superuser.html", user=current_user)
     # if user is not logged in, redirect to login page
     return redirect(url_for('login'))
 
