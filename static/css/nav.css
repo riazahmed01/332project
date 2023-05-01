@@ -10,12 +10,11 @@ a:hover {
     text-decoration:none; 
     cursor:pointer;  
 }
-.nav_right{
+#nav_right{
     font-size: 15px;
     padding-left: 18px;
     margin-top: 28px;
     justify-content: right;
-    margin-left: -10px;
 }
 
 .nav_left{

@@ -1,9 +1,4 @@
 
-body {
-    min-height: 100%;
-    background-color: #ffffff;
-}
-
 a {
   color: rgb(53, 143, 234);
   text-decoration: none;
@@ -13,7 +8,6 @@ body {
     background-color: #ffffff;
 }
 
-}
 .login-root {
     background: #fff;
     display: flex;
