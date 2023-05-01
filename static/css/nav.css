@@ -1,11 +1,8 @@
 .navbar{
     background-color: black;
     display: flex;
-    justify-content: center;
-    justify-self: center;
 }
 a{
-    color: white;
     text-decoration: none;
 }
 a:hover {
@@ -15,6 +12,8 @@ a:hover {
 }
 .nav_right{
     font-size: 15px;
+    padding-left: 18px;
+    margin-top: 28px;
     justify-content: right;
     margin-left: -10px;
 }
@@ -22,6 +21,5 @@ a:hover {
 .nav_left{
     font-size: 28px;
     justify-content: left;
-    padding: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
