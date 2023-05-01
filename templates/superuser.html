@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}"-->
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %}
+    Employee
+{% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+
+    <h1>Admin dashboard</h1>
+    <div class="application">
+        <h2>Review rejections</h2>
+    </div>
+    <div class="manage_emply">
+        <h2>Manage employee</h2>
+    </div>
+    <div class="manage-costumers">
+        <h2>Manage Costumers</h2>
+    </div>
+    <div class="manage-products">
+        <h2>Manage products</h2>
+    </div>
+    <div class="manage-builds">
+        <h2>Manage builds</h2>
+    </div>
+    
+{% endblock %}

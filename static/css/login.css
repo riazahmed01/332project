@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-h1 {
-    color: navy;
-  }
-=======
+
 body {
     min-height: 100%;
     background-color: #ffffff;
@@ -11,6 +7,12 @@ body {
 a {
   color: rgb(53, 143, 234);
   text-decoration: none;
+}
+body {
+    min-height: 100%;
+    background-color: #ffffff;
+}
+
 }
 .login-root {
     background: #fff;
@@ -145,5 +147,3 @@ input[type="submit"] {
     font-weight: 600;
     margin: 0 10px;
 }
-
->>>>>>> Stashed changes

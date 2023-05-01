@@ -21,26 +21,6 @@
 <div class="navbar">
     <img id="logo" src="{{ url_for('static', filename='assets/logo.jpg') }}"
         height="70rem">
-<<<<<<< Updated upstream
-    <span class="nav_left">
-        <a href="{{ url_for('index') }}"><i class="fa fa-fw fa-home"></i>Home |<a>
-        <a href="{{ url_for('custombuild') }}">Custom Builds |<a>
-        <a href="{{ url_for('cpu') }}">CPU |<a>
-        <a href="">Cooling |<a>
-        <a href="">GPU |<a>
-        <a href="">Motherboard |<a>
-        <a href="">Memory |<a>
-        <a href="">Storage |<a>
-        <a href="">PSU |<a>
-        <a href="">Case |<a>
-        <a href="">Laptops |<a>
-        <a href="">Other |<a>
-        <a href="{{ url_for('cart') }}">Cart<a>
-    </span>         
-    <span id="nav_right">
-        <a href="{{ url_for('login') }}">Log in/Sign up</a>
-    </span>  
-=======
     <div class="nav_left">
         <a href="{{ url_for('index') }}" style="color:white"><i class="fa fa-fw fa-home"></i>Home |<a>
         <a href="{{ url_for('custombuild') }}" style="color:white">Custom Builds |<a>
@@ -65,7 +45,6 @@
             <a href="{{ url_for('login') }}" style="color:white">Log in/Sign up</a>
         {% endif %}
     </div>      
->>>>>>> Stashed changes
 </div>
 
 {% block content %}

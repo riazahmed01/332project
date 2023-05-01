@@ -1,12 +1,6 @@
 .navbar{
     background-color: black;
-    size: 40px;
     display: flex;
-<<<<<<< Updated upstream
-    justify-content: center;
-=======
-    width: 100%;
->>>>>>> Stashed changes
 }
 a{
     text-decoration: none;
@@ -16,18 +10,15 @@ a:hover {
     text-decoration:none; 
     cursor:pointer;  
 }
-<<<<<<< Updated upstream
-.navbar .nav_right{
-=======
-#nav_right{
->>>>>>> Stashed changes
+.nav_right{
     font-size: 15px;
     padding-left: 18px;
     margin-top: 28px;
     justify-content: right;
+    margin-left: -10px;
 }
 
-.navbar .nav_left{
+.nav_left{
     font-size: 28px;
     justify-content: left;
     margin-top: 20px;

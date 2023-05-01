@@ -2,17 +2,65 @@
 
 <!--links-->
 {% block links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/login.css') }}"
+/>
 {% endblock links %}
 
 <!--title of the page-->
-{% block titlePage %}
-    Login
-{% endblock titlePage %}
+{% block titlePage %} Login {% endblock titlePage %}
 
 <!--main content of the page-->
 {% block content %}
 
-    <h1>log in page</h1>
-    
+<!DOCTYPE html>
+
+<div class="formbg-outer">
+  <div class="formbg">
+    <div class="formbg-inner padding-horizontal--48">
+      <span class="padding-bottom--15">Sign in to your account</span>
+      <form id="stripe-login", method="POST">
+        <div class="field padding-bottom--24">
+          <label for="email">Email</label>
+          <input type="email" name="email" />
+        </div>
+        <div class="field padding-bottom--24">
+          <div class="grid--50-50">
+            <label for="password">Password</label>
+            <div class="reset-pass">
+              <a href="#">Forgot your password?</a>
+            </div>
+          </div>
+          <input type="password" name="password" />
+        </div>
+        <div
+          class="field field-checkbox padding-bottom--24 flex-flex align-center"
+        >
+          <label for="checkbox">
+            <input type="checkbox" name="checkbox" /> Stay signed in for a week
+          </label>
+        </div>
+        <div class="field padding-bottom--24">
+          <input type="submit" name="submit" value="Continue" />
+        </div>
+        <div class="field"></div>
+      </form>
+    </div>
+  </div>
+  <div class="footer-link padding-top--24">
+    <span
+      >Don't have an account?
+      <a href="{{ url_for('signup') }}">Sign up</a></span
+    >
+    <div
+      class="listing padding-top--24 padding-bottom--24 flex-flex center-center"
+    >
+      <span><a href="#">© Computer Labs</a></span>
+      <span><a href="#">Contact</a></span>
+      <span><a href="#">Privacy & terms</a></span>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
