@@ -3,6 +3,8 @@ from flask import Flask, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import re
+
 # create flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret key"
@@ -127,14 +129,18 @@ def signup():
         rg_password2 = request.form['password2']
         new_address = request.form['address']
         new_phonenumber = request.form['phonenumber']
+        email_validate_pattern = r"^\S+@\S+\.\S+$"
+        rg_email = re.match(email_validate_pattern, rg_email)
 
         #handling post request
         if rg_password1 != rg_password2:
             return 'Passwords do not match'
         elif len(rg_password1) < 8:
             return 'Password must be at least 8 characters'
-        elif len(rg_email) < 4:
-            return 'Email must be at least 3 characters'
+        #elif len(rg_email) < 4:
+        elif rg_email:
+        #   return 'Email must be at least 3 characters'
+            return 'Invalid format of email'
         elif len(new_phonenumber) > 10:
             return 'Invalid format of phone number'
         else:
