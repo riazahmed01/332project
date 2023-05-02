@@ -129,8 +129,7 @@ def signup():
         rg_password2 = request.form['password2']
         new_address = request.form['address']
         new_phonenumber = request.form['phonenumber']
-        email_validate_pattern = r"^\S+@\S+\.\S+$"
-        rg_email = re.match(email_validate_pattern, rg_email)
+        email_validate_pattern = "^\S+@\S+\.\S+$"
 
         #handling post request
         if rg_password1 != rg_password2:
@@ -138,7 +137,7 @@ def signup():
         elif len(rg_password1) < 8:
             return 'Password must be at least 8 characters'
         #elif len(rg_email) < 4:
-        elif rg_email:
+        elif not (bool(re.match(email_validate_pattern, rg_email))):
         #   return 'Email must be at least 3 characters'
             return 'Invalid format of email'
         elif len(new_phonenumber) > 10:
@@ -221,3 +220,4 @@ def user():
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)
+
