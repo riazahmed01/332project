@@ -60,9 +60,9 @@ class Application(db.Model):
 
 class Banned(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    f_name = db.Column(db.String(50), nullable=False)
+    l_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
     date_registered = db.Column(db.Date, default=datetime.date.today())
 
 class Product(db.Model):
@@ -227,22 +227,9 @@ def user():
     # if user is not logged in, redirect to login page
     return redirect(url_for('login'))
 
-@app.route("/accept/", methods=['POST','GET'])
-def accept(id):
-    to_be_added = Application.query.filter_by(id=id).first()
-    new_user = User(email = to_be_added.email, password=to_be_added.password, f_name = to_be_added.f_name,
-                           l_name = to_be_added.l_name, address = to_be_added.address, phone_number=to_be_added.phone_number)
-    try:
-        db.session.add(new_user)
-        db.session.delete(to_be_added)
-        db.session.commit()
-        return redirect('/user')
-    except:
-        return "Something went wrong adding the user."
-
 @app.route("/reject/<int:id>", methods=['POST','GET'])
 def reject(id):
-    if request.method == 'POST':
+    if request.method =='POST':
         to_be_rejected = Application.query.filter_by(id=id).first()
         to_be_rejected.memo = request.form['memo']
         to_be_rejected.rejected = 1
@@ -253,6 +240,47 @@ def reject(id):
             return "Something went wrong rejecting the user."
     return render_template("memo.html")
 
+@app.route("/review/<int:id>", methods=['POST','GET'])
+def review(id):
+    if request.method == 'POST':
+        if "accept-EMPLY" in request.form or "reject-EMPLY" in request.form:
+            if "accept-EMPLY" in request.form:
+                to_be_added = Application.query.filter_by(id=id).first()
+                new_user = User(email = to_be_added.email, password=to_be_added.password, f_name = to_be_added.f_name,
+                                    l_name = to_be_added.l_name, address = to_be_added.address, phone_number=to_be_added.phone_number)
+                try:
+                    db.session.add(new_user)
+                    db.session.delete(to_be_added)
+                    db.session.commit()
+                    return redirect('/user')
+                except:
+                    return "Something went wrong adding the user."
+            elif "reject-EMPLY" in request.form:
+                return redirect(url_for('reject', id =id))
+        if "aprove-SU" in request.form or "disaprove-SU" in request.form:
+            if "aprove-SU" in request.form:
+                to_be_banned = Application.query.filter_by(id=id).first()
+                banned_user = Banned(email = to_be_banned.email, f_name = to_be_banned.f_name,
+                           l_name = to_be_banned.l_name)
+                try:
+                    db.session.add(banned_user)
+                    db.session.delete(to_be_banned)
+                    db.session.commit()
+                    return redirect('/user')
+                except:
+                    return "Something went wrong aproving the rejection"
+            elif "disaprove-SU" in request.form:
+                to_be_added = Application.query.filter_by(id=id).first()
+                new_user = User(email = to_be_added.email, password=to_be_added.password, f_name = to_be_added.f_name,
+                                    l_name = to_be_added.l_name, address = to_be_added.address, phone_number=to_be_added.phone_number)
+                try:
+                    db.session.add(new_user)
+                    db.session.delete(to_be_added)
+                    db.session.commit()
+                    return redirect('/user')
+                except:
+                    return "Something went wrong adding the user."
+    return redirect('/user') 
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)

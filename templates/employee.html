@@ -30,12 +30,10 @@
                             <div class="phonenumber">{{ application.phone_number }}</div>
                             <div class="date">{{ application.date_registered }}</div>
                         </div>
-                        <div class="accept">
-                            <a href="{{ url_for('accept', id=application.id) }}">Accept</a>
-                        </div>
-                        <div class="reject">
-                            <a href="{{ url_for('reject', id=application.id) }}">Reject</a>
-                        </div>
+                        <form action="{{ url_for('review', id=application.id) }}" method="POST">
+                            <button name="accept-EMPLY">Accept</button>
+                            <button name="reject-EMPLY">Reject</button>
+                        </form>
                     </div>
                 </div>
             {% endif %}
