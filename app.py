@@ -104,7 +104,10 @@ def login():
         password_in = request.form['password']
 
         user = User.query.filter_by(email=email_in, password=password_in).first()
-        if user:
+        banned = Banned.query.filter_by(email=email_in).first()
+        if banned:
+            return "Log In failed. Your account has been banned."
+        elif user:
             login_user(user)
             return redirect(url_for('index'))
         else:
