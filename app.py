@@ -2,6 +2,7 @@
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
+import smtplib
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 # create flask app
 app = Flask(__name__)
@@ -42,6 +43,20 @@ class User(db.Model, UserMixin):
     #shopping_cart = db.relationship('Product')
     def __repr__(self):
         return '<Name %r>' %self.f_name
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    f_name = db.Column(db.String(50), nullable=False)
+    l_name = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(200), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    rejected = db.Column(db.Boolean)
+    date_registered = db.Column(db.Date, default=datetime.date.today())
+    memo = db.Column(db.String(300))
+    def __repr__(self):
+        return '<Name %r>' %self.email
 
 class Banned(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -135,13 +150,13 @@ def signup():
         elif len(new_phonenumber) > 10:
             return 'Invalid format of phone number'
         else:
-            new_user = User(email = rg_email, password=rg_password1, f_name = first_name, l_name = last_name, 
+            new_application = Application(email = rg_email, password=rg_password1, f_name = first_name, l_name = last_name, 
                                 address = new_address, phone_number=new_phonenumber)
-            existing_user = User.query.filter_by(email=rg_email).first()
+            existing_user = Application.query.filter_by(email=rg_email).first()
             if existing_user:
                 return "You are already registered"
             try:
-                db.session.add(new_user)
+                db.session.add(new_application)
                 db.session.commit()
                 return redirect('/login')
             except:
@@ -164,6 +179,7 @@ def product():
     else:
         texts = Comments.query.order_by(Comments.date_registered)
         return render_template("product.html", texts = texts)
+
 # route user page
 @app.route("/user/", methods=['POST','GET'])
 @login_required
@@ -201,13 +217,41 @@ def user():
             return render_template("user.html", user=current_user)
         
     elif current_user.user_type == "EMPLY":
+        curr_applications = Application.query.order_by(Application.date_registered)
             # display page for admin users
-        return render_template("employee.html", user=current_user)
+        return render_template("employee.html", applications=curr_applications)
     elif current_user.user_type == "SU":
+        rejected_applications = Application.query.order_by(Application.rejected==1)
             # display page for admin users
-        return render_template("superuser.html", user=current_user)
+        return render_template("superuser.html", applications=rejected_applications)
     # if user is not logged in, redirect to login page
     return redirect(url_for('login'))
+
+@app.route("/accept/", methods=['POST','GET'])
+def accept(id):
+    to_be_added = Application.query.filter_by(id=id).first()
+    new_user = User(email = to_be_added.email, password=to_be_added.password, f_name = to_be_added.f_name,
+                           l_name = to_be_added.l_name, address = to_be_added.address, phone_number=to_be_added.phone_number)
+    try:
+        db.session.add(new_user)
+        db.session.delete(to_be_added)
+        db.session.commit()
+        return redirect('/user')
+    except:
+        return "Something went wrong adding the user."
+
+@app.route("/reject/<int:id>", methods=['POST','GET'])
+def reject(id):
+    if request.method == 'POST':
+        to_be_rejected = Application.query.filter_by(id=id).first()
+        to_be_rejected.memo = request.form['memo']
+        to_be_rejected.rejected = 1
+        try:
+            db.session.commit()
+            return redirect('/user')
+        except:
+            return "Something went wrong rejecting the user."
+    return render_template("memo.html")
 
 # Run the app
 if __name__ == "__main__":

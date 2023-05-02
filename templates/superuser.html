@@ -16,6 +16,26 @@
     <h1>Admin dashboard</h1>
     <div class="application">
         <h2>Review rejections</h2>
+        {% for application in applications %}
+                <div class="list">
+                    <div class="user">
+                        <div class="user-meta">
+                            <div class="name">{{ application.f_name }} {{ application.l_name }}</div>
+                            <div class="email">{{ application.email }}</div>
+                            <div class="address">{{ application.address }}</div>
+                            <div class="phonenumber">{{ application.phone_number }}</div>
+                            <div class="date">{{ application.date_registered }}</div>
+                            <div class="memo">{{ application.memo }}</div>
+                        </div>
+                        <div class="accept">
+                            <a href="{{ url_for('reject', id=application.id) }}">Accept</a>
+                        </div>
+                        <div class="reject">
+                            <a href="{{ url_for('accept', id=application.id) }}">Reject</a>
+                        </div>
+                    </div>
+                </div>
+        {% endfor %}
     </div>
     <div class="manage_emply">
         <h2>Manage employee</h2>
