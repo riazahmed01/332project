@@ -49,7 +49,11 @@
             <div class="list">
                 <div class="user">
                     <div class="user-meta">
+                        {% if current_user.is_authenticated %}
+                        <div class="name">{{ current_user.f_name }} {{ current_user.l_name }}</div>
+                        {% else %}
                         <div class="name">Guest user</div>
+                        {% endif %}
                         <div class="time">{{ text.date_created}}</div>
                     </div>
                 </div>
