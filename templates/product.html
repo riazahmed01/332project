@@ -21,9 +21,9 @@
 
         <p class="price">USD $457.99</p>
 
-        <a href="{{ url_for('cart') }}" class="cart-button">
-            Add to Cart
-        </a>
+        <form action="{{ url_for('cart') }}" method="POST">
+            <button name="add-product">Add to Cart</button>
+        </form>
 
         <p class="des">
             Random text about product. Random text about product. Random text about product. 

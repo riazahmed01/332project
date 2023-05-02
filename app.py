@@ -77,6 +77,14 @@ class Product(db.Model):
     type_name = db.Column(db.String(100), nullable=False)
     date_registered = db.Column(db.Date, default=datetime.date.today())
 
+class Shopping(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product = db.Column(db.Integer)
+    #purchased = db.Column(db.Boolean, default=False)
+    #date_purchased = db.Column(db.Date, default=datetime.date.today())
+
+#class Purchased(db.)
+
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(100), nullable=False) 
@@ -176,18 +184,26 @@ def signup():
 @app.route("/product/", methods=['POST','GET'])
 def product():
     if request.method == "POST":
-        guest_text = request.form['comment']
-        new_text = Comments(text=guest_text)
-        try:
-            db.session.add(new_text)
-            db.session.commit()
-            return redirect('/product')
-        except:
-            return "Comment was longer than 300 characters"
+        if "comment-submit" in request.form:
+            guest_text = request.form['comment']
+            new_text = Comments(text=guest_text)
+            try:
+                db.session.add(new_text)
+                db.session.commit()
+                return redirect('/product')
+            except:
+                return "Comment was longer than 300 characters"
+        elif "add-product" in request.form:
+            product = request.form['product']
+            try:
+                db.session.add(product)
+                db.session.commit()
+            except:
+                return "Invalid product"
     else:
         texts = Comments.query.order_by(Comments.date_registered)
         return render_template("product.html", texts = texts)
-
+    
 # route user page
 @app.route("/user/", methods=['POST','GET'])
 @login_required
