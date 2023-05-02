@@ -3,6 +3,8 @@ from flask import Flask, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import re
+
 # create flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret key"
@@ -104,7 +106,10 @@ def login():
         password_in = request.form['password']
 
         user = User.query.filter_by(email=email_in, password=password_in).first()
-        if user:
+        banned = Banned.query.filter_by(email=email_in).first()
+        if banned:
+            return "Log In failed. Your account has been banned."
+        elif user:
             login_user(user)
             return redirect(url_for('index'))
         else:
@@ -124,14 +129,17 @@ def signup():
         rg_password2 = request.form['password2']
         new_address = request.form['address']
         new_phonenumber = request.form['phonenumber']
+        email_validate_pattern = "^\S+@\S+\.\S+$"
 
         #handling post request
         if rg_password1 != rg_password2:
             return 'Passwords do not match'
         elif len(rg_password1) < 8:
             return 'Password must be at least 8 characters'
-        elif len(rg_email) < 4:
-            return 'Email must be at least 3 characters'
+        #elif len(rg_email) < 4:
+        elif not (bool(re.match(email_validate_pattern, rg_email))):
+        #   return 'Email must be at least 3 characters'
+            return 'Invalid format of email'
         elif len(new_phonenumber) > 10:
             return 'Invalid format of phone number'
         else:
@@ -212,3 +220,4 @@ def user():
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)
+
