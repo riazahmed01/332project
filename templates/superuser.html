@@ -16,6 +16,25 @@
     <h1>Admin dashboard</h1>
     <div class="application">
         <h2>Review rejections</h2>
+        {% for application in applications %}
+            {% if application.rejected==1 %}
+                <div class="list">
+                    <div class="user">
+                        <div class="user-meta">
+                            <div class="name">{{ application.f_name }} {{ application.l_name }}</div>
+                            <div class="email">{{ application.email }}</div>
+                            <div class="address">{{ application.address }}</div>
+                            <div class="phonenumber">{{ application.phone_number }}</div>
+                            <div class="date">{{ application.date_registered }}</div>
+                        </div>
+                        <form action="{{ url_for('review', id=application.id) }}" method="POST">
+                            <button name="aprove-SU">Aprove</button>
+                            <button name="disaprove-SU">Disaprove</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
     <div class="manage_emply">
         <h2>Manage employee</h2>

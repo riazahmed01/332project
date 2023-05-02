@@ -1,0 +1,9 @@
+.application.a{
+    color: black;
+    text-decoration: none;
+}
+.application.a:hover{
+    color: rgb(86, 82, 82);
+    cursor: pointer;
+    text-decoration: none;
+}
