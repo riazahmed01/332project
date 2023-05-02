@@ -1,9 +1,116 @@
-.application.a{
-    color: black;
+/* Employee Dashboard Styles */
+
+/* Setup section */
+.setup {
+    margin-bottom: 20px;
+  }
+  
+  .setup a {
+    display: block;
+    background-color: #e6e6e6;
+    padding: 10px;
+    text-align: center;
+    color: #333;
     text-decoration: none;
-}
-.application.a:hover{
-    color: rgb(86, 82, 82);
-    cursor: pointer;
-    text-decoration: none;
-}
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .setup a:hover {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  /* Application section */
+  .application {
+    margin-bottom: 20px;
+  }
+  
+  .application h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .application .list {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .application .user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .application .user-meta {
+    flex: 1;
+  }
+  
+  .application .user-meta .name {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .application .user-meta .email {
+    margin-bottom: 5px;
+  }
+  
+  .application .user-meta .address {
+    margin-bottom: 5px;
+  }
+  
+  .application .user-meta .phonenumber {
+    margin-bottom: 5px;
+  }
+  
+  .application .user-meta .date {
+    font-style: italic;
+    font-size: 14px;
+  }
+  
+  .application form button {
+    background-color: #e6e6e6;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .application form button:hover {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  /* Messages section */
+  .messages {
+    margin-bottom: 20px;
+  }
+  
+  .messages h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Warnings section */
+  .warnings {
+    margin-bottom: 20px;
+  }
+  
+  .warnings h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Compliments section */
+  .compliments {
+    margin-bottom: 20px;
+  }
+  
+  .compliments h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
