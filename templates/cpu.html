@@ -15,76 +15,16 @@
 <h1>New brand products</h1>
 <div class="products-display">
     <div class="main-container">
+        {% for product in products %}
         <div class="product">
             <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
             <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 1</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-                
-            </div>
-            
-        </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 2</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-                
+                <h3><a href="{{ url_for('product', id=product.id) }}">{{ product.name }}</a></h3>
+                <h4>{{ product.description }}</h4>
+                <p>{{ product.price }}</p>
             </div>
         </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 3</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-                
-            </div>
-        </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 4</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-                
-            </div>
-        </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 5</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-                
-            </div>
-        </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 6</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 7</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-            </div>
-        </div>
-        <div class="product">
-            <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
-            <div class="product_desc">
-                <h3><a href="{{ url_for('product') }}">Product 8</a></h3>
-                <h4>Short description</h4>
-                <p>$100.99</p>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
