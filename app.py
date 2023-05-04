@@ -335,6 +335,22 @@ def review(id):
                 except:
                     return "Something went wrong adding the user."
     return redirect('/user') 
+
+# route create custombuilds page
+@app.route("/createbuild/")
+def createbuild():
+    return render_template("createbuild.html")
+
+# route recommended custombuilds page
+@app.route("/recbuild/")
+def recbuild():
+    return render_template("recbuild.html")
+
+# route user custombuilds page
+@app.route("/userbuild/")
+def userbuild():
+    return render_template("userbuild.html")
+
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)

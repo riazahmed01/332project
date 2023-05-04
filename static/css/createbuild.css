@@ -1,0 +1,113 @@
+.createContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.title{
+    width: auto;
+    height: auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.title h1{
+    font-size: 80px;
+}
+
+.createItems{
+    width: auto;
+    height: auto;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.createItems h1{
+    padding-bottom: 10px;
+}
+
+.createItems button {
+    background-color: lightskyblue;
+    border: 1px black;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    cursor: pointer;
+    margin: 4px 2px;
+    width: 160px;
+}
+
+.productInf{
+    display: flex;
+}
+
+.productInf img{
+    height: 50px;
+    width: 50px;
+    border: 1px black;
+}
+
+.createItems p{
+    padding: 5px;
+    font-size: 20px;
+}
+
+.compatibility{
+    display: flex;
+    width: auto;
+    margin: 20px;
+}
+
+
+.compItem1{
+    background-color: rgb(28, 217, 81);
+    font-size: 20px;
+    padding: 10px;
+    width: auto;
+}
+
+.compItem2{
+    background-color: yellow;
+    font-size: 20px;
+    padding: 10px;
+    width: auto;
+}
+
+.compItem3{
+    background-color: red;
+    font-size: 20px;
+    padding: 10px;
+    width: auto;
+}
+
+.power{
+    margin: 20px;
+}
+
+.compatibility h2{
+    font-size: 10px;
+}
+
+.total{
+    margin: 20px;
+}
+
+
+.total button {
+    background-color: lightskyblue;
+    border: 1px black;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 25px;
+    cursor: pointer;
+    margin: 4px 2px;
+    width: auto;
+}
