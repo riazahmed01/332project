@@ -91,9 +91,20 @@ class Purchased(db.Model):
     product = db.Column(db.String(250), unique=True, nullable=False)
     #date_purchased = db.Column(db.Date, default=datetime.date.today())
 
+
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(100), nullable=False) 
+
+
+#class Specs(db.Model)
+
+
+    
+
+
+
+
  
   
 # route home/index page
@@ -111,6 +122,43 @@ def custombuild():
 def cpu():
     cpu_products = Product.query.order_by(Product.type_name=='cpu')
     return render_template("cpu.html", products=cpu_products)
+
+@app.route("/cooling/")
+def cooling():
+    cpu_products = Product.query.order_by(Product.type_name=='cooling')
+    return render_template("cooling.html", products=cpu_products)
+
+@app.route("/gpu/")
+def gpu():
+    cpu_products = Product.query.order_by(Product.type_name=='gpu')
+    return render_template("gpu.html", products=cpu_products)
+
+@app.route("/motherboard/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='motherboard')
+    return render_template("motherboard.html", products=cpu_products)
+
+@app.route("/memory/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='memory')
+    return render_template("memory.html", products=cpu_products)
+
+@app.route("/storage/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='storage')
+    return render_template("storage.html", products=cpu_products)
+
+@app.route("/psu/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='psu')
+    return render_template("psu.html", products=cpu_products)
+
+@app.route("/case/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='case')
+    return render_template("case.html", products=cpu_products)
+
+
 
 # route cart page
 @app.route("/cart/")
@@ -382,4 +430,6 @@ def userbuild():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
 
