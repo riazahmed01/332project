@@ -87,14 +87,15 @@ class Shopping(db.Model):
 
 
 
-#class Purchased(db.)
-
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(100), nullable=False) 
 
 
-# type_name='cpu' manufacturer(Intel, AMD) 
+#class Specs(db.Model)
+
+
+    
 
 
 
@@ -118,12 +119,12 @@ def cpu():
     return render_template("cpu.html", products=cpu_products)
 
 @app.route("/cooling/")
-def cpu():
+def cooling():
     cpu_products = Product.query.order_by(Product.type_name=='cooling')
     return render_template("cooling.html", products=cpu_products)
 
 @app.route("/gpu/")
-def cpu():
+def gpu():
     cpu_products = Product.query.order_by(Product.type_name=='gpu')
     return render_template("gpu.html", products=cpu_products)
 
