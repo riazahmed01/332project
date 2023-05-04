@@ -83,9 +83,13 @@ class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product = db.Column(db.Integer)
     #purchased = db.Column(db.Boolean, default=False)
-    #date_purchased = db.Column(db.Date, default=datetime.date.today())
+    
 
-#class Purchased(db.)
+class Purchased(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    product = db.Column(db.String(250), unique=True, nullable=False)
+    #date_purchased = db.Column(db.Date, default=datetime.date.today())
 
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -201,12 +205,21 @@ def product(id):
             except:
                 return "Comment was longer than 300 characters"
         elif "add-product" in request.form:
+            #productTable = Product.query.filter_by(id = NULL).first()
+            #new_product = Shopping(product = productTable)
             product = request.form['product']
             try:
-                db.session.add(product)
+                #db.session.add(new_product)
                 db.session.commit()
+                return "Added to cart"
             except:
                 return "Invalid product"
+            
+        # Add product retrieves the product ID value in Prodcuts
+        # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
+        # in Produts 
+
+
     else:
         texts = Comments.query.filter_by(product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts = texts, product=product)
@@ -352,6 +365,21 @@ def userbuild():
     return render_template("userbuild.html")
 
 # Run the app
+
+@app.route("/createbuild/")
+def createbuild():
+    return render_template("createbuild.html")
+
+# route recommended custombuilds page
+@app.route("/recbuild/")
+def recbuild():
+    return render_template("recbuild.html")
+
+# route user custombuilds page
+@app.route("/userbuild/")
+def userbuild():
+    return render_template("userbuild.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
 
