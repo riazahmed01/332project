@@ -24,9 +24,11 @@ db = SQLAlchemy(app)
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(300), nullable=False)
-    date_registered = db.Column(db.Date, default=datetime.date.today()) 
+    date_registered = db.Column(db.Date, default=datetime.date.today())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     def __repr__(self):
-        return '<Name %r>' %self.id
+        return '<Name %r>' %self.text
     
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,7 +44,7 @@ class User(db.Model, UserMixin):
     compliments = db.Column(db.Integer, default=0)
     warnings = db.Column(db.Integer, default=0)
     balance = db.Column(db.Float, default=0.00)
-    #shopping_cart = db.relationship('Product')
+    comments = db.relationship('Comments', backref='user', lazy=True)
     def __repr__(self):
         return '<Name %r>' %self.f_name
 
@@ -73,9 +75,9 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable =False)
     discounts = db.Column(db.Float, nullable=False, default=0.0)
-    #comments = db.relationship('Comments')
     type_name = db.Column(db.String(100), nullable=False)
     date_registered = db.Column(db.Date, default=datetime.date.today())
+    comments = db.relationship('Comments', backref='product', lazy=True)
 
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -103,7 +105,8 @@ def custombuild():
 # route cpu page
 @app.route("/cpu/")
 def cpu():
-    return render_template("cpu.html")
+    cpu_products = Product.query.order_by(Product.type_name=='cpu')
+    return render_template("cpu.html", products=cpu_products)
 
 # route cart page
 @app.route("/cart/")
@@ -181,16 +184,20 @@ def signup():
         return render_template("signup.html")
 
 # route product page
-@app.route("/product/", methods=['POST','GET'])
-def product():
+@app.route("/product/<int:id>", methods=['POST','GET'])
+def product(id):
+    product = Product.query.filter_by(id=id).first()
     if request.method == "POST":
         if "comment-submit" in request.form:
-            guest_text = request.form['comment']
-            new_text = Comments(text=guest_text)
+            new_text = request.form['comment']
+            if current_user.is_authenticated:
+                new_comment = Comments(text=new_text, user_id=current_user.id,product_id = id)
+            else:
+                new_comment = Comments(text=new_text,product_id = id)
             try:
-                db.session.add(new_text)
+                db.session.add(new_comment)
                 db.session.commit()
-                return redirect('/product')
+                return redirect(url_for('product',id=id))
             except:
                 return "Comment was longer than 300 characters"
         elif "add-product" in request.form:
@@ -201,9 +208,27 @@ def product():
             except:
                 return "Invalid product"
     else:
-        texts = Comments.query.order_by(Comments.date_registered)
-        return render_template("product.html", texts = texts)
-    
+        texts = Comments.query.filter_by(product_id=id).order_by(Comments.date_registered)
+        return render_template("product.html", texts = texts, product=product)
+
+@app.route("/add_product/", methods=['POST', 'GET'])
+def add_product():
+    if request.method=='POST':
+        new_name = request.form['name']
+        new_descrp = request.form['description']
+        new_price = request.form['price']
+        new_type_prod = request.form['type-name']
+        existing_product = Product.query.filter_by(name = new_name).first()
+        new_prod = Product(name=new_name, description=new_descrp, price=new_price, type_name=new_type_prod, discounts=0)
+        if existing_product:
+            return "This product already exists. Try a new one."
+        try:
+            db.session.add(new_prod)
+            db.session.commit()
+            return redirect('/user')
+        except:
+            return "Something went wrong when adding the product"
+    return render_template("addproduct.html")
 # route user page
 @app.route("/user/", methods=['POST','GET'])
 @login_required
@@ -245,6 +270,11 @@ def user():
             # display page for admin users
         return render_template("employee.html", applications=curr_applications)
     elif current_user.user_type == "SU":
+        if request.method == 'POST':
+            if 'add-product' in request.form:
+                return redirect('/add_product/')
+            elif 'delete-product' in request.form:
+                return "Not available right now"
         rejected_applications = Application.query.order_by(Application.rejected==1)
             # display page for admin users
         return render_template("superuser.html", applications=rejected_applications)
@@ -305,6 +335,22 @@ def review(id):
                 except:
                     return "Something went wrong adding the user."
     return redirect('/user') 
+
+# route create custombuilds page
+@app.route("/createbuild/")
+def createbuild():
+    return render_template("createbuild.html")
+
+# route recommended custombuilds page
+@app.route("/recbuild/")
+def recbuild():
+    return render_template("recbuild.html")
+
+# route user custombuilds page
+@app.route("/userbuild/")
+def userbuild():
+    return render_template("userbuild.html")
+
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)
