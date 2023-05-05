@@ -82,14 +82,13 @@ class Product(db.Model):
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product = db.Column(db.Integer)
-    #purchased = db.Column(db.Boolean, default=False)
     
 
 class Purchased(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     product = db.Column(db.String(250), unique=True, nullable=False)
-    #date_purchased = db.Column(db.Date, default=datetime.date.today())
+    date_purchased = db.Column(db.Date, default=datetime.date.today())
 
 
 class Taboo(db.Model):
@@ -97,10 +96,17 @@ class Taboo(db.Model):
     word = db.Column(db.String(100), nullable=False) 
 
 
-#class Specs(db.Model)
-
+class Specs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    manufacturer = db.Column(db.String(100), nullable=False) 
+    size = db.Column(db.String(100), nullable=False) 
 
     
+class Rating(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stars = db.Column(db.Integer, default=0)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    product = db.Column(db.String(250), unique=True, nullable=False)
 
 
 
@@ -195,6 +201,7 @@ def login():
     else:
         return render_template("login.html")
 
+
 # route signup page
 
 @app.route("/signup/",methods=['POST','GET'])
@@ -266,8 +273,15 @@ def product(id):
         # Add product retrieves the product ID value in Prodcuts
         # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
         # in Produts 
+        elif "rate" in request.form:
+            email_in = request.form['email']
+            product_in = request.form['product']
 
-
+            user = User.query.filter_by(email=email_in, password=product_in).first()
+            if user:
+                "Rating stars displayed"
+            else:
+                return "Nothing Displayed"
     else:
         texts = Comments.query.filter_by(product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts = texts, product=product)
