@@ -1,155 +1,155 @@
 /* Style for user page */
 
 h1 {
-    color: navy;
-    text-align: center;
+  color: navy;
+  text-align: center;
 }
 
 h2 {
-  text-align: center;
+text-align: center;
 }
 
 
 .user-display {
-  display: flex;
-  justify-content: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+display: flex;
+justify-content: center;
+margin-top: 50px;
+margin-bottom: 50px;
 }
 
 .main-container {
-  background-color: #e5e5e5;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-  padding: 30px;
-  width: 80%;
+background-color: #e5e5e5;
+border-radius: 10px;
+box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+padding: 30px;
+width: 80%;
 }
 
 .user-information {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 
 .user-information img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  margin-bottom: 20px;
-  object-fit: cover;
-  object-position: center;
+width: 200px;
+height: 200px;
+border-radius: 50%;
+margin-bottom: 20px;
+object-fit: cover;
+object-position: center;
 }
 
 .user-information ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+list-style: none;
+padding: 0;
+margin: 0;
 }
 
 .user-information li {
-  margin-bottom: 10px;
-  font-size: 16px;
+margin-bottom: 10px;
+font-size: 16px;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 30px;
+width: 100%;
+border-collapse: collapse;
+margin-top: 30px;
 }
 
 th {
-  background-color: #f2f2f2;
-  text-align: left;
-  padding: 10px;
-  font-weight: normal;
-  font-size: 16px;
+background-color: #f2f2f2;
+text-align: left;
+padding: 10px;
+font-weight: normal;
+font-size: 16px;
 }
 
 td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
+padding: 10px;
+border-bottom: 1px solid #ddd;
+font-size: 14px;
 }
 
 td:first-child {
-  font-weight: bold;
+font-weight: bold;
 }
 
 .wishlist {
-  margin-top: 60px;
-  margin-left: 30px;
+margin-top: 60px;
+margin-left: 30px;
 }
 
 .wishlist li {
-  margin-bottom: 10px;
-  font-size: 16px;
+margin-bottom: 10px;
+font-size: 16px;
 }
 
 form {
-  margin-top: 30px;
+margin-top: 30px;
 }
 
 label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 16px;
+display: block;
+margin-bottom: 10px;
+font-size: 16px;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="tel"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-  font-size: 16px;
+width: 100%;
+padding: 10px;
+border-radius: 5px;
+border: 1px solid #ccc;
+margin-bottom: 20px;
+font-size: 16px;
 }
 
 input[type="submit"] {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
+background-color: #4CAF50;
+color: #fff;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-size: 16px;
 }
 
 input[type="submit"]:hover {
-  background-color: #3e8e41;
+background-color: #3e8e41;
 }
 
 .payment-information ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+list-style: none;
+padding: 0;
+margin: 0;
 }
 
 .payment-information li {
-  margin-bottom: 10px;
-  font-size: 16px;
-  display: flex;
-  justify-content: space-between;
+margin-bottom: 10px;
+font-size: 16px;
+display: flex;
+justify-content: space-between;
 }
 
 .remove-payment {
-  background-color: #FF4136;
-  color: #fff;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+background-color: #FF4136;
+color: #fff;
+padding: 5px 10px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-size: 14px;
 }
 
 .remove-payment:hover {
-  background-color: #FF4C4C;
+background-color: #FF4C4C;
 }
 
 .card-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+display: flex;
+justify-content: space-between;
+align-items: center;
 }

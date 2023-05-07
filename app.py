@@ -91,6 +91,18 @@ class Product(db.Model):
     comments = db.relationship('Comments', backref='product', lazy=True)
 
 
+class PaymentMethod(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    card_number = db.Column(db.String(16), nullable=False)
+    card_type = db.Column(db.String(20), nullable=False)
+    expiration_date = db.Column(db.String(7), nullable=False)
+    cvv = db.Column(db.String(3), nullable=False)
+
+    def __repr__(self):
+        return f'<PaymentMethod {self.card_type} {self.card_number}>'
+
+
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product = db.Column(db.Integer)
@@ -121,6 +133,7 @@ class Rating(db.Model):
     product = db.Column(db.String(250), unique=True, nullable=False)
 
 
+# route home/index page
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -203,7 +216,6 @@ def logout():
 # route login page
 
 
-# route login page
 @app.route("/login/", methods=['POST', 'GET'])
 def login():
     if request.method == "POST":
@@ -264,9 +276,94 @@ def signup():
     else:
         return render_template("signup.html")
 
+
+@app.route('/add_payment_method', methods=['GET', 'POST'])
+@login_required
+def add_payment():
+    if request.method == 'POST':
+        user_id = current_user.id
+        card_number = request.form['card_number']
+        card_type = request.form['card_type']
+        expiration_date = request.form['expiration_date']
+        cvv = request.form['cvv']
+
+        payment_method = PaymentMethod(
+            user_id=user_id,
+            card_number=card_number,
+            card_type=card_type,
+            expiration_date=expiration_date,
+            cvv=cvv
+        )
+
+        db.session.add(payment_method)
+        db.session.commit()
+
+        return redirect(url_for('user'))
+
+    else:
+        return render_template('payment_methods.html')
+
+
+@app.route('/delete_payment_method/<int:payment_method_id>', methods=['POST'])
+@login_required
+def delete_payment_method(payment_method_id):
+    payment_method = PaymentMethod.query.get(payment_method_id)
+    if payment_method and payment_method.user_id == current_user.id:
+        db.session.delete(payment_method)
+        db.session.commit()
+    return redirect(url_for('user'))
+
+
+@app.route("/deposit/", methods=['POST', 'GET'])
+@login_required
+def deposit():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        current_user.balance += float(amount)
+        db.session.commit()
+        flash(f"Your balance has been updated to ${current_user.balance:.2f}")
+        return redirect(url_for('balance'))
+    else:
+        return render_template("deposit.html")
+
+
+@app.route("/withdraw/", methods=['POST', 'GET'])
+@login_required
+def withdraw():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        if float(amount) > current_user.balance:
+            flash(f"You do not have enough balance to withdraw ${amount}")
+        else:
+            current_user.balance -= float(amount)
+            db.session.commit()
+            flash(
+                f"Your balance has been updated to ${current_user.balance:.2f}")
+        return redirect(url_for('balance'))
+    else:
+        return render_template("withdraw.html")
+
+
+@app.route('/balance', methods=['GET', 'POST'])
+@login_required
+def balance():
+    if request.method == 'POST':
+        if 'deposit' in request.form:
+            return redirect(url_for('deposit', next=request.full_path))
+        elif 'withdraw' in request.form:
+            return redirect(url_for('withdraw', next=request.full_path))
+
+    payment_methods = PaymentMethod.query.filter_by(
+        user_id=current_user.id).all()
+
+    next_url = request.args.get('next')
+    if next_url:
+        return redirect(next_url)
+
+    return render_template('balance.html', balance=current_user.balance, payment_methods=payment_methods)
+
+
 # route product page
-
-
 @app.route("/product/<int:id>", methods=['POST', 'GET'])
 def product(id):
     product = Product.query.filter_by(id=id).first()
@@ -420,6 +517,9 @@ def manage_product():
         except:
             return "Something went wrong when adding the product"
     return render_template("manageproduct.html", products=products)
+
+################ User page #########################
+# route user page
 
 
 @app.route("/user/", methods=['POST', 'GET'])
