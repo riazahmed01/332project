@@ -131,38 +131,38 @@ def cpu():
 
 @app.route("/cooling/")
 def cooling():
-    cpu_products = Product.query.order_by(Product.type_name=='cooling')
-    return render_template("cooling.html", products=cpu_products)
+    cooling_products = Product.query.order_by(Product.type_name=='cooling')
+    return render_template("cooling.html", products=cooling_products)
 
 @app.route("/gpu/")
 def gpu():
-    cpu_products = Product.query.order_by(Product.type_name=='gpu')
-    return render_template("gpu.html", products=cpu_products)
+    gpu_products = Product.query.order_by(Product.type_name=='gpu')
+    return render_template("gpu.html", products=gpu_products)
 
 @app.route("/motherboard/")
-def cpu():
-    cpu_products = Product.query.order_by(Product.type_name=='motherboard')
-    return render_template("motherboard.html", products=cpu_products)
+def motherboard():
+    motherboard_products = Product.query.order_by(Product.type_name=='motherboard')
+    return render_template("motherboard.html", products=motherboard_products)
 
 @app.route("/memory/")
-def cpu():
-    cpu_products = Product.query.order_by(Product.type_name=='memory')
-    return render_template("memory.html", products=cpu_products)
+def memory():
+    memory_products = Product.query.order_by(Product.type_name=='memory')
+    return render_template("memory.html", products=memory_products)
 
 @app.route("/storage/")
-def cpu():
-    cpu_products = Product.query.order_by(Product.type_name=='storage')
-    return render_template("storage.html", products=cpu_products)
+def storage():
+    storage_products = Product.query.order_by(Product.type_name=='storage')
+    return render_template("storage.html", products=storage_products)
 
 @app.route("/psu/")
-def cpu():
-    cpu_products = Product.query.order_by(Product.type_name=='psu')
-    return render_template("psu.html", products=cpu_products)
+def psu():
+    psu_products = Product.query.order_by(Product.type_name=='psu')
+    return render_template("psu.html", products=psu_products)
 
 @app.route("/case/")
-def cpu():
-    cpu_products = Product.query.order_by(Product.type_name=='case')
-    return render_template("case.html", products=cpu_products)
+def case():
+    case_products = Product.query.order_by(Product.type_name=='case')
+    return render_template("case.html", products=case_products)
 
 
 
