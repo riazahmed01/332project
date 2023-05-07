@@ -1,5 +1,5 @@
 # import libraries
-from flask import Flask, redirect, render_template, request, session, url_for, flash
+from flask import Flask, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -27,19 +27,14 @@ class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(300), nullable=False)
     date_registered = db.Column(db.Date, default=datetime.date.today())
-<<<<<<< HEAD
-
-    def __repr__(self):
-        return '<Name %r>' % self.id
-
-
-=======
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey(
+        'product.id'), nullable=False)
+
     def __repr__(self):
-        return '<Name %r>' %self.text
-    
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
+        return '<Name %r>' % self.text
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -54,15 +49,8 @@ class User(db.Model, UserMixin):
     compliments = db.Column(db.Integer, default=0)
     warnings = db.Column(db.Integer, default=0)
     balance = db.Column(db.Float, default=0.00)
-<<<<<<< HEAD
-    payment_methods = db.relationship(
-        'PaymentMethod', backref='user', lazy=True)
-
-    # shopping_cart = db.relationship('Product')
-
-=======
     comments = db.relationship('Comments', backref='user', lazy=True)
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
+
     def __repr__(self):
         return '<Name %r>' % self.f_name
 
@@ -78,8 +66,10 @@ class Application(db.Model):
     rejected = db.Column(db.Boolean)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     memo = db.Column(db.String(300))
+
     def __repr__(self):
-        return '<Name %r>' %self.email
+        return '<Name %r>' % self.email
+
 
 class Banned(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -95,19 +85,16 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     discounts = db.Column(db.Float, nullable=False, default=0.0)
-<<<<<<< HEAD
-    # comments = db.relationship('Comments')
-=======
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
     type_name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, default=0)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
 
+
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product = db.Column(db.Integer)
-    
+
 
 class Purchased(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -116,35 +103,17 @@ class Purchased(db.Model):
     date_purchased = db.Column(db.Date, default=datetime.date.today())
 
 
-
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-<<<<<<< HEAD
     word = db.Column(db.String(100), nullable=False)
-
-
-class PaymentMethod(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    card_number = db.Column(db.String(16), nullable=False)
-    card_type = db.Column(db.String(20), nullable=False)
-    expiration_date = db.Column(db.String(7), nullable=False)
-    cvv = db.Column(db.String(3), nullable=False)
-
-    def __repr__(self):
-        return f'<PaymentMethod {self.card_type} {self.card_number}>'
-
-
-=======
-    word = db.Column(db.String(100), nullable=False) 
 
 
 class Specs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    manufacturer = db.Column(db.String(100), nullable=False) 
-    size = db.Column(db.String(100), nullable=False) 
+    manufacturer = db.Column(db.String(100), nullable=False)
+    size = db.Column(db.String(100), nullable=False)
 
-    
+
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Integer, default=0)
@@ -152,12 +121,6 @@ class Rating(db.Model):
     product = db.Column(db.String(250), unique=True, nullable=False)
 
 
-
-
- 
-  
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
-# route home/index page
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -174,49 +137,53 @@ def custombuild():
 
 @app.route("/cpu/")
 def cpu():
-    cpu_products = Product.query.order_by(Product.type_name=='cpu')
+    cpu_products = Product.query.order_by(Product.type_name == 'cpu')
     return render_template("cpu.html", products=cpu_products)
+
 
 @app.route("/cooling/")
 def cooling():
-    cpu_products = Product.query.order_by(Product.type_name=='cooling')
+    cpu_products = Product.query.order_by(Product.type_name == 'cooling')
     return render_template("cooling.html", products=cpu_products)
+
 
 @app.route("/gpu/")
 def gpu():
-    cpu_products = Product.query.order_by(Product.type_name=='gpu')
+    cpu_products = Product.query.order_by(Product.type_name == 'gpu')
     return render_template("gpu.html", products=cpu_products)
+
 
 @app.route("/motherboard/")
 def motherboard():
-    cpu_products = Product.query.order_by(Product.type_name=='motherboard')
+    cpu_products = Product.query.order_by(Product.type_name == 'motherboard')
     return render_template("motherboard.html", products=cpu_products)
+
 
 @app.route("/memory/")
 def memory():
-    cpu_products = Product.query.order_by(Product.type_name=='memory')
+    cpu_products = Product.query.order_by(Product.type_name == 'memory')
     return render_template("memory.html", products=cpu_products)
+
 
 @app.route("/storage/")
 def storage():
-    cpu_products = Product.query.order_by(Product.type_name=='storage')
+    cpu_products = Product.query.order_by(Product.type_name == 'storage')
     return render_template("storage.html", products=cpu_products)
+
 
 @app.route("/psu/")
 def psu():
-    cpu_products = Product.query.order_by(Product.type_name=='psu')
+    cpu_products = Product.query.order_by(Product.type_name == 'psu')
     return render_template("psu.html", products=cpu_products)
+
 
 @app.route("/case/")
 def case():
-    cpu_products = Product.query.order_by(Product.type_name=='case')
+    cpu_products = Product.query.order_by(Product.type_name == 'case')
     return render_template("case.html", products=cpu_products)
 
 
-
 # route cart page
-
-
 @app.route("/cart/")
 def cart():
     return render_template("cart.html")
@@ -236,23 +203,19 @@ def logout():
 # route login page
 
 
+# route login page
 @app.route("/login/", methods=['POST', 'GET'])
 def login():
     if request.method == "POST":
         email_in = request.form['email']
         password_in = request.form['password']
 
-<<<<<<< HEAD
         user = User.query.filter_by(
             email=email_in, password=password_in).first()
-        if user:
-=======
-        user = User.query.filter_by(email=email_in, password=password_in).first()
         banned = Banned.query.filter_by(email=email_in).first()
         if banned:
             return "Log In failed. Your account has been banned."
         elif user:
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
             login_user(user)
             return redirect(url_for('index'))
         else:
@@ -262,7 +225,6 @@ def login():
 
 
 # route signup page
-
 
 @app.route("/signup/", methods=['POST', 'GET'])
 def signup():
@@ -281,22 +243,16 @@ def signup():
             return 'Passwords do not match'
         elif len(rg_password1) < 8:
             return 'Password must be at least 8 characters'
-        #elif len(rg_email) < 4:
+        # elif len(rg_email) < 4:
         elif not (bool(re.match(email_validate_pattern, rg_email))):
-        #   return 'Email must be at least 3 characters'
+            #   return 'Email must be at least 3 characters'
             return 'Invalid format of email'
         elif len(new_phonenumber) > 10:
             return 'Invalid format of phone number'
         else:
-<<<<<<< HEAD
-            new_user = User(email=rg_email, password=rg_password1, f_name=first_name, l_name=last_name,
-                            address=new_address, phone_number=new_phonenumber)
-            existing_user = User.query.filter_by(email=rg_email).first()
-=======
-            new_application = Application(email = rg_email, password=rg_password1, f_name = first_name, l_name = last_name, 
-                                address = new_address, phone_number=new_phonenumber)
+            new_application = Application(email=rg_email, password=rg_password1, f_name=first_name, l_name=last_name,
+                                          address=new_address, phone_number=new_phonenumber)
             existing_user = Application.query.filter_by(email=rg_email).first()
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
             if existing_user:
                 return "You are already registered"
             try:
@@ -309,68 +265,63 @@ def signup():
         return render_template("signup.html")
 
 # route product page
-<<<<<<< HEAD
 
 
-@app.route("/product/", methods=['POST', 'GET'])
-def product():
-=======
-@app.route("/product/<int:id>", methods=['POST','GET'])
+@app.route("/product/<int:id>", methods=['POST', 'GET'])
 def product(id):
     product = Product.query.filter_by(id=id).first()
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
     if request.method == "POST":
         if "comment-submit" in request.form:
             new_text = request.form['comment']
             if current_user.is_authenticated:
-                new_comment = Comments(text=new_text, user_id=current_user.id,product_id = id)
+                new_comment = Comments(
+                    text=new_text, user_id=current_user.id, product_id=id)
             else:
-                new_comment = Comments(text=new_text,product_id = id)
+                new_comment = Comments(text=new_text, product_id=id)
             try:
                 db.session.add(new_comment)
                 db.session.commit()
-                return redirect(url_for('product',id=id))
+                return redirect(url_for('product', id=id))
             except:
                 return "Comment was longer than 300 characters"
         elif "add-product" in request.form:
-            #productTable = Product.query.filter_by(id = NULL).first()
-            #new_product = Shopping(product = productTable)
+            # productTable = Product.query.filter_by(id = NULL).first()
+            # new_product = Shopping(product = productTable)
             product = request.form['product']
             try:
-                #db.session.add(new_product)
+                # db.session.add(new_product)
                 db.session.commit()
                 return "Added to cart"
             except:
                 return "Invalid product"
-            
+
         # Add product retrieves the product ID value in Prodcuts
         # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
-        # in Produts 
+        # in Produts
         elif "rate" in request.form:
             email_in = request.form['email']
             product_in = request.form['product']
 
-            user = User.query.filter_by(email=email_in, password=product_in).first()
+            user = User.query.filter_by(
+                email=email_in, password=product_in).first()
             if user:
                 "Rating stars displayed"
             else:
                 return "Nothing Displayed"
     else:
-<<<<<<< HEAD
-        texts = Comments.query.order_by(Comments.date_registered)
-        return render_template("product.html", texts=texts)
-
-=======
-        texts = Comments.query.filter_by(product_id=id).order_by(Comments.date_registered)
-        return render_template("product.html", texts = texts, product=product)
+        texts = Comments.query.filter_by(
+            product_id=id).order_by(Comments.date_registered)
+        return render_template("product.html", texts=texts, product=product)
 
 ############################# SU functions ######################################
-#Delete one particular costumer from database
+# Delete one particular costumer from database
+
+
 @app.route("/delete_costumer/<int:id>")
 def delete_costumer(id):
     to_be_deleted = User.query.filter_by(id=id).first()
-    banned_user = Banned(email = to_be_deleted.email, f_name = to_be_deleted.f_name,
-                           l_name = to_be_deleted.l_name)
+    banned_user = Banned(email=to_be_deleted.email, f_name=to_be_deleted.f_name,
+                         l_name=to_be_deleted.l_name)
     try:
         db.session.add(banned_user)
         db.session.delete(to_be_deleted)
@@ -378,15 +329,20 @@ def delete_costumer(id):
         return redirect('/manage_costumer')
     except:
         return "Costumer wasnt found"
-    
-#Displays all the costumers
-@app.route("/manage_costumer/", methods=['POST','GET'])
+
+# Displays all the costumers
+
+
+@app.route("/manage_costumer/", methods=['POST', 'GET'])
 def manage_costumers():
-    costumers = User.query.filter_by(user_type='CU').order_by(User.date_registered)
+    costumers = User.query.filter_by(
+        user_type='CU').order_by(User.date_registered)
     return render_template("managecostumer.html", costumers=costumers)
 
-#Displays all the employees
-@app.route("/manage_emply/", methods=['POST','GET'])
+# Displays all the employees
+
+
+@app.route("/manage_emply/", methods=['POST', 'GET'])
 def manage_emply():
     if request.method == 'POST':
         first_name = request.form['first_name']
@@ -395,8 +351,8 @@ def manage_emply():
         rg_password = request.form['password']
         new_address = request.form['address']
         new_phonenumber = request.form['phonenumber']
-        new_user = User(email = rg_email, password=rg_password, f_name = first_name,
-                        l_name = last_name, address = new_address, phone_number=new_phonenumber,
+        new_user = User(email=rg_email, password=rg_password, f_name=first_name,
+                        l_name=last_name, address=new_address, phone_number=new_phonenumber,
                         user_type='EMPLY')
         try:
             db.session.add(new_user)
@@ -404,15 +360,18 @@ def manage_emply():
             return redirect('/manage_emply/')
         except:
             return "Employee could not be added"
-    employees = User.query.filter_by(user_type="EMPLY").order_by(User.date_registered)
-    return render_template("manageemply.html", employees = employees)
+    employees = User.query.filter_by(
+        user_type="EMPLY").order_by(User.date_registered)
+    return render_template("manageemply.html", employees=employees)
 
-#Delete an emply from database
-@app.route("/deleteemply/<int:id>", methods=['POST','GET'])
+# Delete an emply from database
+
+
+@app.route("/deleteemply/<int:id>", methods=['POST', 'GET'])
 def deleteemply(id):
     fired = User.query.filter_by(id=id).first()
-    banned_user = Banned(email = fired.email, f_name = fired.f_name,
-                           l_name = fired.l_name)
+    banned_user = Banned(email=fired.email, f_name=fired.f_name,
+                         l_name=fired.l_name)
     try:
         db.session.add(banned_user)
         db.session.delete(fired)
@@ -421,11 +380,13 @@ def deleteemply(id):
     except:
         return "Emplyee wasnt found"
 
-#Display information of a particular product
-@app.route("/reviewprod/<int:id>", methods=['POST',"GET"])
+# Display information of a particular product
+
+
+@app.route("/reviewprod/<int:id>", methods=['POST', "GET"])
 def reviewprod(id):
     product = Product.query.filter_by(id=id).first()
-    if request.method =='POST':
+    if request.method == 'POST':
         if 'delete-prod' in request.form:
             try:
                 db.session.delete(product)
@@ -435,17 +396,19 @@ def reviewprod(id):
                 "Something went wrong deleting the product"
     return render_template("reviewprod.html", product=product)
 
-#Displays all the products
+# Displays all the products
+
+
 @app.route("/manage_product/", methods=['POST', 'GET'])
 def manage_product():
     products = Product.query.order_by(Product.date_registered)
-    if request.method=='POST':
+    if request.method == 'POST':
         new_name = request.form['name']
         new_descrp = request.form['description']
         new_price = request.form['price']
         new_type_prod = request.form['type-name']
         new_quantity = request.form['quantity']
-        existing_product = Product.query.filter_by(name = new_name).first()
+        existing_product = Product.query.filter_by(name=new_name).first()
         new_prod = Product(name=new_name, description=new_descrp, price=new_price, type_name=new_type_prod,
                            discounts=0, quantity=new_quantity)
         if existing_product:
@@ -457,10 +420,6 @@ def manage_product():
         except:
             return "Something went wrong when adding the product"
     return render_template("manageproduct.html", products=products)
-
-################ User page #########################
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
-# route user page
 
 
 @app.route("/user/", methods=['POST', 'GET'])
@@ -502,106 +461,9 @@ def user():
             return render_template("user.html", user=current_user)
 
     elif current_user.user_type == "EMPLY":
-<<<<<<< HEAD
+        curr_applications = Application.query.order_by(
+            Application.date_registered)
         # display page for admin users
-        return render_template("employee.html", user=current_user)
-    elif current_user.user_type == "SU":
-        # display page for admin users
-        return render_template("superuser.html", user=current_user)
-    # if user is not logged in, redirect to login page
-    return redirect(url_for('login'))
-
-
-@app.route('/add_payment_method', methods=['GET', 'POST'])
-@login_required
-def add_payment():
-    if request.method == 'POST':
-        user_id = current_user.id
-        card_number = request.form['card_number']
-        card_type = request.form['card_type']
-        expiration_date = request.form['expiration_date']
-        cvv = request.form['cvv']
-
-        payment_method = PaymentMethod(
-            user_id=user_id,
-            card_number=card_number,
-            card_type=card_type,
-            expiration_date=expiration_date,
-            cvv=cvv
-        )
-
-        db.session.add(payment_method)
-        db.session.commit()
-
-        return redirect(url_for('user'))
-
-    else:
-        return render_template('payment_methods.html')
-
-
-@app.route('/delete_payment_method/<int:payment_method_id>', methods=['POST'])
-@login_required
-def delete_payment_method(payment_method_id):
-    payment_method = PaymentMethod.query.get(payment_method_id)
-    if payment_method and payment_method.user_id == current_user.id:
-        db.session.delete(payment_method)
-        db.session.commit()
-    return redirect(url_for('user'))
-
-
-@app.route("/deposit/", methods=['POST', 'GET'])
-@login_required
-def deposit():
-    if request.method == 'POST':
-        amount = request.form['amount']
-        current_user.balance += float(amount)
-        db.session.commit()
-        flash(f"Your balance has been updated to ${current_user.balance:.2f}")
-        return redirect(url_for('balance'))
-    else:
-        return render_template("deposit.html")
-
-
-@app.route("/withdraw/", methods=['POST', 'GET'])
-@login_required
-def withdraw():
-    if request.method == 'POST':
-        amount = request.form['amount']
-        if float(amount) > current_user.balance:
-            flash(f"You do not have enough balance to withdraw ${amount}")
-        else:
-            current_user.balance -= float(amount)
-            db.session.commit()
-            flash(
-                f"Your balance has been updated to ${current_user.balance:.2f}")
-        return redirect(url_for('balance'))
-    else:
-        return render_template("withdraw.html")
-
-
-@app.route('/balance', methods=['GET', 'POST'])
-@login_required
-def balance():
-    if request.method == 'POST':
-        if 'deposit' in request.form:
-            return redirect(url_for('deposit', next=request.full_path))
-        elif 'withdraw' in request.form:
-            return redirect(url_for('withdraw', next=request.full_path))
-
-    payment_methods = PaymentMethod.query.filter_by(
-        user_id=current_user.id).all()
-
-    next_url = request.args.get('next')
-    if next_url:
-        return redirect(next_url)
-
-    return render_template('balance.html', balance=current_user.balance, payment_methods=payment_methods)
-
-
-# Run the app
-=======
-        curr_applications = Application.query.order_by(Application.date_registered)
-            # display page for admin users
         return render_template("employee.html", applications=curr_applications)
     elif current_user.user_type == "SU":
         if request.method == 'POST':
@@ -611,17 +473,20 @@ def balance():
                 return redirect('/manage_emply/')
             elif 'costumer' in request.form:
                 return redirect('/manage_costumer/')
-        rejected_applications = Application.query.order_by(Application.rejected==1)
-            # display page for admin users
+        rejected_applications = Application.query.order_by(
+            Application.rejected == 1)
+        # display page for admin users
         return render_template("superuser.html", applications=rejected_applications)
     # if user is not logged in, redirect to login page
     return redirect(url_for('login'))
 
 ############ Common User application functionality ###########################
-#Rejects the application
-@app.route("/reject/<int:id>", methods=['POST','GET'])
+# Rejects the application
+
+
+@app.route("/reject/<int:id>", methods=['POST', 'GET'])
 def reject(id):
-    if request.method =='POST':
+    if request.method == 'POST':
         to_be_rejected = Application.query.filter_by(id=id).first()
         to_be_rejected.memo = request.form['memo']
         to_be_rejected.rejected = 1
@@ -632,15 +497,17 @@ def reject(id):
             return "Something went wrong rejecting the user."
     return render_template("memo.html")
 
-#Reviews the application
-@app.route("/review/<int:id>", methods=['POST','GET'])
+# Reviews the application
+
+
+@app.route("/review/<int:id>", methods=['POST', 'GET'])
 def review(id):
     if request.method == 'POST':
         if "accept-EMPLY" in request.form or "reject-EMPLY" in request.form:
             if "accept-EMPLY" in request.form:
                 to_be_added = Application.query.filter_by(id=id).first()
-                new_user = User(email = to_be_added.email, password=to_be_added.password, f_name = to_be_added.f_name,
-                                    l_name = to_be_added.l_name, address = to_be_added.address, phone_number=to_be_added.phone_number)
+                new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name,
+                                l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
                 try:
                     db.session.add(new_user)
                     db.session.delete(to_be_added)
@@ -649,12 +516,12 @@ def review(id):
                 except:
                     return "Something went wrong adding the user."
             elif "reject-EMPLY" in request.form:
-                return redirect(url_for('reject', id =id))
+                return redirect(url_for('reject', id=id))
         if "aprove-SU" in request.form or "disaprove-SU" in request.form:
             if "aprove-SU" in request.form:
                 to_be_banned = Application.query.filter_by(id=id).first()
-                banned_user = Banned(email = to_be_banned.email, f_name = to_be_banned.f_name,
-                           l_name = to_be_banned.l_name)
+                banned_user = Banned(email=to_be_banned.email, f_name=to_be_banned.f_name,
+                                     l_name=to_be_banned.l_name)
                 try:
                     db.session.add(banned_user)
                     db.session.delete(to_be_banned)
@@ -664,8 +531,8 @@ def review(id):
                     return "Something went wrong aproving the rejection"
             elif "disaprove-SU" in request.form:
                 to_be_added = Application.query.filter_by(id=id).first()
-                new_user = User(email = to_be_added.email, password=to_be_added.password, f_name = to_be_added.f_name,
-                                    l_name = to_be_added.l_name, address = to_be_added.address, phone_number=to_be_added.phone_number)
+                new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name,
+                                l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
                 try:
                     db.session.add(new_user)
                     db.session.delete(to_be_added)
@@ -673,26 +540,29 @@ def review(id):
                     return redirect('/user')
                 except:
                     return "Something went wrong adding the user."
-    return redirect('/user') 
+    return redirect('/user')
 ####################### Costum Builds #############################
+
+
 @app.route("/createbuild/")
 def createbuild():
     return render_template("createbuild.html")
 
 # route recommended custombuilds page
+
+
 @app.route("/recbuild/")
 def recbuild():
     return render_template("recbuild.html")
 
 # route user custombuilds page
+
+
 @app.route("/userbuild/")
 def userbuild():
     return render_template("userbuild.html")
 
+
 ### Run application ###
->>>>>>> 5e5baf8013fb5d0ce52979b16157d2cd71a163e8
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
