@@ -140,27 +140,27 @@ def gpu():
     return render_template("gpu.html", products=cpu_products)
 
 @app.route("/motherboard/")
-def cpu():
+def motherboard():
     cpu_products = Product.query.order_by(Product.type_name=='motherboard')
     return render_template("motherboard.html", products=cpu_products)
 
 @app.route("/memory/")
-def cpu():
+def memory():
     cpu_products = Product.query.order_by(Product.type_name=='memory')
     return render_template("memory.html", products=cpu_products)
 
 @app.route("/storage/")
-def cpu():
+def storage():
     cpu_products = Product.query.order_by(Product.type_name=='storage')
     return render_template("storage.html", products=cpu_products)
 
 @app.route("/psu/")
-def cpu():
+def psu():
     cpu_products = Product.query.order_by(Product.type_name=='psu')
     return render_template("psu.html", products=cpu_products)
 
 @app.route("/case/")
-def cpu():
+def case():
     cpu_products = Product.query.order_by(Product.type_name=='case')
     return render_template("case.html", products=cpu_products)
 
