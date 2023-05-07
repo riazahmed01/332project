@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/createbuild.css') }}">
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %}
+    Custom Build
+{% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+
+<div class="createContainer">
+
+    <div class="title">
+        <h1>Create a Custom Build</h1>
+    </div>
+
+    <div class="createItems">
+        <h1>CPU</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+
+    <div class="createItems">
+        <h1>CPU Cooler</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+
+    <div class="createItems">
+        <h1>Motherboard</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+
+    <div class="createItems">
+        <h1>Memory</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+
+    <div class="createItems">
+        <h1>Storage</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+    
+    <div class="createItems">
+        <h1>Video Card</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+
+    <div class="createItems">
+        <h1>Power Supply</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+    
+    <div class="createItems">
+        <h1>Other</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">Item Name</p>
+        </div>
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
+    </div>
+
+    <div class="power">
+        <h1> Estimated Wattage: 1000W</h1>
+    </div>
+
+    <div class="compatibility">
+        <h1>Compatibility:</h1>
+        <div class="compItem1"> <p>Good: no issues found</p></div>
+        <div class="compItem2"> <p>Warning: may require bios update</p></div>
+        <div class="compItem3"> <p>Issue: issue detected, one or more items may be out of stock</p></div>
+    </div>
+    
+    <div class="total">
+        <h1>Total: $12345</h1>
+        <button id="add-item">Add to Cart</button>
+    </div>
+
+</div>
+    
+{% endblock %}

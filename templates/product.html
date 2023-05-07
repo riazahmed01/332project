@@ -17,30 +17,24 @@
         <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
     </div>
     <div class="detail">
-        <h1 class="title">Product Name</h1>
+        <h1 class="title">{{ product.name }}</h1>
 
-        <p class="price">USD $457.99</p>
+        <p class="price">USD ${{ product.price }}</p>
 
-        <a href="{{ url_for('cart') }}" class="cart-button">
-            Add to Cart
-        </a>
+        <form action="{{ url_for('cart') }}" method="POST">
+            <button name="add-product">Add to Cart</button>
+        </form>
 
-        <p class="des">
-            Random text about product. Random text about product. Random text about product. 
-            Random text about product. Random text about product. Random text about product. Random text
-             about product. Random text about product. Random text about product. Random text about product.
-              Random text about product. Random text about product. Random text about product. Random text 
-              about product. Random text about product. Random text about product. Random text about product.
-        </p>
+        <p class="des">{{ product.description }}</p>
 
     </div>
 </div>
 <div class="comment-session">
     
     <div class="comment-box">
-        <form action="/product" METHOD="POST">
+        <form action="{{ url_for('product', id=product.id) }}" METHOD="POST">
             <textarea name="comment" placeholder="Your Message (Max 300 characters)"></textarea>
-            <button class="comment-submit">Comment</button>
+            <button name="comment-submit">Comment</button>
         </form>
     </div>
     <br/><br/>
@@ -49,10 +43,10 @@
             <div class="list">
                 <div class="user">
                     <div class="user-meta">
-                        {% if current_user.is_authenticated %}
-                        <div class="name">{{ current_user.f_name }} {{ current_user.l_name }}</div>
+                        {% if text.user %}
+                        <div class="name">{{ text.user.f_name }} {{ text.user.l_name }}</div>
                         {% else %}
-                        <div class="name">Guest user</div>
+                        <div class="name">Guest User</div>
                         {% endif %}
                         <div class="time">{{ text.date_created}}</div>
                     </div>

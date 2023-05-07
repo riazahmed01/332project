@@ -120,3 +120,36 @@ input[type="submit"] {
 input[type="submit"]:hover {
   background-color: #3e8e41;
 }
+
+.payment-information ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.payment-information li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.remove-payment {
+  background-color: #FF4136;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-payment:hover {
+  background-color: #FF4C4C;
+}
+
+.card-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

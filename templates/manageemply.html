@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/managecostumer.css') }}">
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %}
+    Memo
+{% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+<div class="table-display">
+    <h2>Employee</h2>
+    <table>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Password</th>
+            <th scope="col">Address</th>
+            <th scope="col">Phone-number</th>
+            <th scope="col">Compliments</th>
+            <th scope="col">Warnings</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        {% for emply in employees %}
+        <tr>
+            <th scope="row">{{ emply.id }}</th>
+            <td>{{ emply.f_name }} {{ emply.l_name}}</td>
+            <td>{{ emply.email }}</td>
+            <td>{{ emply.password }}</td>
+            <td>{{ emply.address }}</td>
+            <td>{{ emply.phone_number }}</td>
+            <td>{{ emply.compliments }}</td>
+            <td>{{ emply.warnings }}</td>
+            <td><a href="">Promote</a></td>
+            <td><a href="{{ url_for('deleteemply', id=emply.id) }}">Fire</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+    <div class="add-employee">
+        <h2>Add an EMPLY</h2>
+        <form METHOD="POST">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" />
+              
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" />
+            
+            <label for="email">Email</label>
+            <input type="email" name="email" />
+              
+            <label for="password">Password</label>
+            <input type="password" name="password" />
+            
+            <label for="address">Address</label>
+            <input type="text" name="address" />
+              
+            <label for="phonenumber">Phone Number</label>
+            <input type="text" name="phonenumber" />
+
+            <button name="submit">Hire</button>
+        </form>
+    </div>
+    
+{% endblock %}

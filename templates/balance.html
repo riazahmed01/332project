@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/balance.css') }}"
+/>
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %} {% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+
+<h1>Wallet Balance</h1>
+<p>Current balance: {{ current_user.balance }}</p>
+
+<h2>Deposit</h2>
+<form method="POST" action="{{ url_for('deposit') }}">
+  <label for="amount">Amount:</label>
+  <input type="number" name="amount" id="amount" step="0.01" required />
+  <label for="paymentMethod">Payment Method:</label>
+  <select name="paymentMethod" id="paymentMethod" required>
+    {% for payment_method in payment_methods %}
+    <option value="{{ payment_method.id }}">
+      {{ payment_method.card_type }} ending in {{
+      payment_method.card_number[-4:] }}
+    </option>
+    {% endfor %}
+  </select>
+
+  <button type="submit">Deposit</button>
+</form>
+
+<h2>Withdraw</h2>
+<form method="POST" action="{{ url_for('withdraw') }}">
+  <label for="amount">Amount:</label>
+  <input type="number" name="amount" id="amount" step="0.01" required />
+  <label for="paymentMethod">Payment Method:</label>
+  <select name="paymentMethod" id="paymentMethod" required>
+    {% for payment_method in payment_methods %} {% if payment_method.user_id ==
+    current_user.id %}
+    <option value="{{ payment_method.id }}">
+      {{ payment_method.card_type }} ending in {{
+      payment_method.card_number[-4:] }}
+    </option>
+    {% endif %} {% endfor %}
+  </select>
+  <button type="submit">Withdraw</button>
+</form>
+
+{% endblock %}
