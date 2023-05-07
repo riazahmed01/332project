@@ -15,33 +15,32 @@
 <div class="custombuild">
     <div class="main-container">
         <div class="computers">
-            <h3>Desktops</h3>
-            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <div class="desc">
-                <p>some random text here</p>
-                <h4><a href = "#">Suggested set ups</a></h4>
-                <h4><a href = "#">Build your own!!</a></h4>
-            </div>
+            <a href = "{{ url_for('createbuild') }}">
+                <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+                <div class="desc">
+                    <h4>Create a New Build</h4>
+                    <p>Create your own custom build</p>
+                </div>
+            </a>
         </div>
         <div class="computers">
-            <h3>Laptops</h3>
-            <img src="{{ url_for('static', filename='assets/laptop.jpg') }}">
-            <div class="desc">
-                <p>some random text here</p>
-                <h4><a href = "#">Suggested set ups</a></h4>
-                <h4><a href = "#">Build your own!!</a></h4>
-            </div>
+            <a href = "{{ url_for('recbuild') }}">
+                <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+                <div class="desc">
+                    <h4>Recommended Builds</h4>
+                    <p>Select from builds created by us</p>
+                </div>
+            </a>
         </div>
         <div class="computers">
-            <h3>Edge Computing</h3>
-            <img src="{{ url_for('static', filename='assets/edge_computing.jpg') }}">
-            <div class="desc">
-                <p>some random text here</p>
-                <h4><a href = "#">Suggested set ups</a></h4>
-                <h4><a href = "#">Build your own!!</a></h4>
-            </div>
+            <a href = "{{ url_for('userbuild') }}">
+                <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+                <div class="desc">
+                    <h4>User Builds</h4>
+                    <p>Select from builds created by other users</p>
+                </div>
+            </a>
         </div>
     </div>
 </div>
-    
 {% endblock %}

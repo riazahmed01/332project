@@ -82,18 +82,35 @@ class Product(db.Model):
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product = db.Column(db.Integer)
-    #purchased = db.Column(db.Boolean, default=False)
     
 
 class Purchased(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     product = db.Column(db.String(250), unique=True, nullable=False)
-    #date_purchased = db.Column(db.Date, default=datetime.date.today())
+    date_purchased = db.Column(db.Date, default=datetime.date.today())
+
 
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(100), nullable=False) 
+
+
+class Specs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    manufacturer = db.Column(db.String(100), nullable=False) 
+    size = db.Column(db.String(100), nullable=False) 
+
+    
+class Rating(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stars = db.Column(db.Integer, default=0)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    product = db.Column(db.String(250), unique=True, nullable=False)
+
+
+
+
  
   
 # route home/index page
@@ -111,6 +128,43 @@ def custombuild():
 def cpu():
     cpu_products = Product.query.order_by(Product.type_name=='cpu')
     return render_template("cpu.html", products=cpu_products)
+
+@app.route("/cooling/")
+def cooling():
+    cpu_products = Product.query.order_by(Product.type_name=='cooling')
+    return render_template("cooling.html", products=cpu_products)
+
+@app.route("/gpu/")
+def gpu():
+    cpu_products = Product.query.order_by(Product.type_name=='gpu')
+    return render_template("gpu.html", products=cpu_products)
+
+@app.route("/motherboard/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='motherboard')
+    return render_template("motherboard.html", products=cpu_products)
+
+@app.route("/memory/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='memory')
+    return render_template("memory.html", products=cpu_products)
+
+@app.route("/storage/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='storage')
+    return render_template("storage.html", products=cpu_products)
+
+@app.route("/psu/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='psu')
+    return render_template("psu.html", products=cpu_products)
+
+@app.route("/case/")
+def cpu():
+    cpu_products = Product.query.order_by(Product.type_name=='case')
+    return render_template("case.html", products=cpu_products)
+
+
 
 # route cart page
 @app.route("/cart/")
@@ -146,6 +200,7 @@ def login():
             return "Log In failed. Invalid Credentials."
     else:
         return render_template("login.html")
+
 
 # route signup page
 
@@ -218,8 +273,15 @@ def product(id):
         # Add product retrieves the product ID value in Prodcuts
         # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
         # in Produts 
+        elif "rate" in request.form:
+            email_in = request.form['email']
+            product_in = request.form['product']
 
-
+            user = User.query.filter_by(email=email_in, password=product_in).first()
+            if user:
+                "Rating stars displayed"
+            else:
+                return "Nothing Displayed"
     else:
         texts = Comments.query.filter_by(product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts = texts, product=product)
@@ -430,7 +492,6 @@ def review(id):
                 except:
                     return "Something went wrong adding the user."
     return redirect('/user') 
-
 ####################### Costum Builds #############################
 @app.route("/createbuild/")
 def createbuild():
@@ -449,4 +510,6 @@ def userbuild():
 ### Run application ###
 if __name__ == "__main__":
     app.run(debug=True)
+
+
 

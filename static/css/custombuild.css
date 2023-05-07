@@ -1,40 +1,35 @@
 .custombuilds{
   box-sizing: border-box;
   width: 100%;
-  padding: 50px;
   margin: auto;
 }
 .computers{
   box-shadow: 0px 7px 7px rgba(0 ,0 ,0 , 0.1);
-  border-radius: 20px;
+  margin: 30px;
+  padding: 20px;
 }
+
+.computers:hover{
+  box-shadow: 15px 15px 15px rgba(0 ,0 ,0 , 0.1);
+  cursor: pointer;
+}
+
 .main-container{
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  gap: 30px;
+  grid-template-columns: repeat(3, auto);
+  padding: 15px;
+  margin: auto;
 }
 .computers img{
-  width: 100%;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-}
-.desc h3{
-  font-size: 24px;
-  padding: 10px 0px;
-  color: black;
+  width: 400px;
+  height: 400px;
 }
 .desc h4{
   font-size: 24px;
-  padding: 10px 0px;
-  color: rgb(81, 73, 73);
+  color: black;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .desc p{
-  font-size: 18px;
-  color: black;
-}
-.desc a{
-  color: rgb(94, 210, 5);
-}
-.desc a:hover{
-  color: rgb(62, 138, 4);
+  color:black;
 }

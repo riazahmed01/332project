@@ -15,7 +15,7 @@ a:hover {
     font-size: 15px;
     padding-left: 18px;
     margin-top: 28px;
-    justify-content: right;
+    text-align: right;
 }
 
 .nav_left{
