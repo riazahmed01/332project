@@ -1,5 +1,5 @@
 # import libraries
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -50,6 +50,7 @@ class User(db.Model, UserMixin):
     warnings = db.Column(db.Integer, default=0)
     balance = db.Column(db.Float, default=0.00)
     comments = db.relationship('Comments', backref='user', lazy=True)
+    payment_methods = db.relationship('PaymentMethod', backref='product', lazy=True)
 
     def __repr__(self):
         return '<Name %r>' % self.f_name
@@ -66,10 +67,8 @@ class Application(db.Model):
     rejected = db.Column(db.Boolean)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     memo = db.Column(db.String(300))
-
     def __repr__(self):
-        return '<Name %r>' % self.email
-
+        return '<Name %r>' %self.email
 
 class Banned(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,12 +77,11 @@ class Banned(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     date_registered = db.Column(db.Date, default=datetime.date.today())
 
-
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Float, nullable =False)
     discounts = db.Column(db.Float, nullable=False, default=0.0)
     type_name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, default=0)
@@ -102,11 +100,10 @@ class PaymentMethod(db.Model):
     def __repr__(self):
         return f'<PaymentMethod {self.card_type} {self.card_number}>'
 
-
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product = db.Column(db.Integer)
-
+    
 
 class Purchased(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -117,21 +114,20 @@ class Purchased(db.Model):
 
 class Taboo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String(100), nullable=False)
+    word = db.Column(db.String(100), nullable=False) 
 
 
 class Specs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    manufacturer = db.Column(db.String(100), nullable=False)
-    size = db.Column(db.String(100), nullable=False)
+    manufacturer = db.Column(db.String(100), nullable=False) 
+    size = db.Column(db.String(100), nullable=False) 
 
-
+    
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Integer, default=0)
     email = db.Column(db.String(50), unique=True, nullable=False)
     product = db.Column(db.String(250), unique=True, nullable=False)
-
 
 # route home/index page
 @app.route("/")
