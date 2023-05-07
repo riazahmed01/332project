@@ -28,9 +28,7 @@ class Comments(db.Model):
     text = db.Column(db.String(300), nullable=False)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    product_id = db.Column(db.Integer, db.ForeignKey(
-        'product.id'), nullable=False)
-
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     def __repr__(self):
         return '<Name %r>' % self.text
 
@@ -51,7 +49,6 @@ class User(db.Model, UserMixin):
     balance = db.Column(db.Float, default=0.00)
     comments = db.relationship('Comments', backref='user', lazy=True)
     payment_methods = db.relationship('PaymentMethod', backref='product', lazy=True)
-
     def __repr__(self):
         return '<Name %r>' % self.f_name
 
@@ -135,57 +132,53 @@ def index():
     return render_template("index.html")
 
 # route custom builds page
-
-
 @app.route("/custombuilds/")
 def custombuild():
     return render_template("custombuild.html")
 
 # route cpu page
-
-
 @app.route("/cpu/")
 def cpu():
     cpu_products = Product.query.order_by(Product.type_name == 'cpu')
     return render_template("cpu.html", products=cpu_products)
 
-
+# route cooling page
 @app.route("/cooling/")
 def cooling():
     cpu_products = Product.query.order_by(Product.type_name == 'cooling')
     return render_template("cooling.html", products=cpu_products)
 
-
+# route gpu page
 @app.route("/gpu/")
 def gpu():
     cpu_products = Product.query.order_by(Product.type_name == 'gpu')
     return render_template("gpu.html", products=cpu_products)
 
-
+# route motherboard page
 @app.route("/motherboard/")
 def motherboard():
     cpu_products = Product.query.order_by(Product.type_name == 'motherboard')
     return render_template("motherboard.html", products=cpu_products)
 
-
+# route memory page
 @app.route("/memory/")
 def memory():
     cpu_products = Product.query.order_by(Product.type_name == 'memory')
     return render_template("memory.html", products=cpu_products)
 
-
+# route storage page
 @app.route("/storage/")
 def storage():
     cpu_products = Product.query.order_by(Product.type_name == 'storage')
     return render_template("storage.html", products=cpu_products)
 
-
+# route psu page
 @app.route("/psu/")
 def psu():
     cpu_products = Product.query.order_by(Product.type_name == 'psu')
     return render_template("psu.html", products=cpu_products)
 
-
+# route case page
 @app.route("/case/")
 def case():
     cpu_products = Product.query.order_by(Product.type_name == 'case')
@@ -197,7 +190,7 @@ def case():
 def cart():
     return render_template("cart.html")
 
-
+# route logout page
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -210,8 +203,6 @@ def logout():
         return "An error occurred while logging out."
 
 # route login page
-
-
 @app.route("/login/", methods=['POST', 'GET'])
 def login():
     if request.method == "POST":
@@ -233,7 +224,6 @@ def login():
 
 
 # route signup page
-
 @app.route("/signup/", methods=['POST', 'GET'])
 def signup():
     if request.method == "POST":
@@ -258,8 +248,7 @@ def signup():
         elif len(new_phonenumber) > 10:
             return 'Invalid format of phone number'
         else:
-            new_application = Application(email=rg_email, password=rg_password1, f_name=first_name, l_name=last_name,
-                                          address=new_address, phone_number=new_phonenumber)
+            new_application = Application(email=rg_email, password=rg_password1, f_name=first_name, l_name=last_name, address=new_address, phone_number=new_phonenumber)
             existing_user = Application.query.filter_by(email=rg_email).first()
             if existing_user:
                 return "You are already registered"
@@ -272,7 +261,7 @@ def signup():
     else:
         return render_template("signup.html")
 
-
+# route add_payment_method page
 @app.route('/add_payment_method', methods=['GET', 'POST'])
 @login_required
 def add_payment():
@@ -299,7 +288,7 @@ def add_payment():
     else:
         return render_template('payment_methods.html')
 
-
+# route delete_payment_method page
 @app.route('/delete_payment_method/<int:payment_method_id>', methods=['POST'])
 @login_required
 def delete_payment_method(payment_method_id):
@@ -309,7 +298,7 @@ def delete_payment_method(payment_method_id):
         db.session.commit()
     return redirect(url_for('user'))
 
-
+# route deposit page
 @app.route("/deposit/", methods=['POST', 'GET'])
 @login_required
 def deposit():
@@ -322,7 +311,7 @@ def deposit():
     else:
         return render_template("deposit.html")
 
-
+# route withdraw page
 @app.route("/withdraw/", methods=['POST', 'GET'])
 @login_required
 def withdraw():
@@ -339,7 +328,7 @@ def withdraw():
     else:
         return render_template("withdraw.html")
 
-
+# route balance page
 @app.route('/balance', methods=['GET', 'POST'])
 @login_required
 def balance():
@@ -348,10 +337,7 @@ def balance():
             return redirect(url_for('deposit', next=request.full_path))
         elif 'withdraw' in request.form:
             return redirect(url_for('withdraw', next=request.full_path))
-
-    payment_methods = PaymentMethod.query.filter_by(
-        user_id=current_user.id).all()
-
+    payment_methods = PaymentMethod.query.filter_by(user_id=current_user.id).all()
     next_url = request.args.get('next')
     if next_url:
         return redirect(next_url)
@@ -408,8 +394,6 @@ def product(id):
 
 ############################# SU functions ######################################
 # Delete one particular costumer from database
-
-
 @app.route("/delete_costumer/<int:id>")
 def delete_costumer(id):
     to_be_deleted = User.query.filter_by(id=id).first()
@@ -423,9 +407,7 @@ def delete_costumer(id):
     except:
         return "Costumer wasnt found"
 
-# Displays all the costumers
-
-
+# Displays all the customer
 @app.route("/manage_costumer/", methods=['POST', 'GET'])
 def manage_costumers():
     costumers = User.query.filter_by(
@@ -433,8 +415,6 @@ def manage_costumers():
     return render_template("managecostumer.html", costumers=costumers)
 
 # Displays all the employees
-
-
 @app.route("/manage_emply/", methods=['POST', 'GET'])
 def manage_emply():
     if request.method == 'POST':
@@ -458,8 +438,6 @@ def manage_emply():
     return render_template("manageemply.html", employees=employees)
 
 # Delete an emply from database
-
-
 @app.route("/deleteemply/<int:id>", methods=['POST', 'GET'])
 def deleteemply(id):
     fired = User.query.filter_by(id=id).first()
@@ -474,8 +452,6 @@ def deleteemply(id):
         return "Emplyee wasnt found"
 
 # Display information of a particular product
-
-
 @app.route("/reviewprod/<int:id>", methods=['POST', "GET"])
 def reviewprod(id):
     product = Product.query.filter_by(id=id).first()
@@ -490,8 +466,6 @@ def reviewprod(id):
     return render_template("reviewprod.html", product=product)
 
 # Displays all the products
-
-
 @app.route("/manage_product/", methods=['POST', 'GET'])
 def manage_product():
     products = Product.query.order_by(Product.date_registered)
@@ -516,8 +490,6 @@ def manage_product():
 
 ################ User page #########################
 # route user page
-
-
 @app.route("/user/", methods=['POST', 'GET'])
 @login_required
 def user():
@@ -557,8 +529,7 @@ def user():
             return render_template("user.html", user=current_user)
 
     elif current_user.user_type == "EMPLY":
-        curr_applications = Application.query.order_by(
-            Application.date_registered)
+        curr_applications = Application.query.order_by( Application.date_registered)
         # display page for admin users
         return render_template("employee.html", applications=curr_applications)
     elif current_user.user_type == "SU":
@@ -578,8 +549,6 @@ def user():
 
 ############ Common User application functionality ###########################
 # Rejects the application
-
-
 @app.route("/reject/<int:id>", methods=['POST', 'GET'])
 def reject(id):
     if request.method == 'POST':
@@ -594,16 +563,13 @@ def reject(id):
     return render_template("memo.html")
 
 # Reviews the application
-
-
 @app.route("/review/<int:id>", methods=['POST', 'GET'])
 def review(id):
     if request.method == 'POST':
         if "accept-EMPLY" in request.form or "reject-EMPLY" in request.form:
             if "accept-EMPLY" in request.form:
                 to_be_added = Application.query.filter_by(id=id).first()
-                new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name,
-                                l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
+                new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name, l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
                 try:
                     db.session.add(new_user)
                     db.session.delete(to_be_added)
@@ -616,8 +582,7 @@ def review(id):
         if "aprove-SU" in request.form or "disaprove-SU" in request.form:
             if "aprove-SU" in request.form:
                 to_be_banned = Application.query.filter_by(id=id).first()
-                banned_user = Banned(email=to_be_banned.email, f_name=to_be_banned.f_name,
-                                     l_name=to_be_banned.l_name)
+                banned_user = Banned(email=to_be_banned.email, f_name=to_be_banned.f_name, l_name=to_be_banned.l_name)
                 try:
                     db.session.add(banned_user)
                     db.session.delete(to_be_banned)
@@ -627,8 +592,7 @@ def review(id):
                     return "Something went wrong aproving the rejection"
             elif "disaprove-SU" in request.form:
                 to_be_added = Application.query.filter_by(id=id).first()
-                new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name,
-                                l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
+                new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name, l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
                 try:
                     db.session.add(new_user)
                     db.session.delete(to_be_added)
@@ -637,23 +601,18 @@ def review(id):
                 except:
                     return "Something went wrong adding the user."
     return redirect('/user')
+
 ####################### Costum Builds #############################
-
-
 @app.route("/createbuild/")
 def createbuild():
     return render_template("createbuild.html")
 
 # route recommended custombuilds page
-
-
 @app.route("/recbuild/")
 def recbuild():
     return render_template("recbuild.html")
 
 # route user custombuilds page
-
-
 @app.route("/userbuild/")
 def userbuild():
     return render_template("userbuild.html")
