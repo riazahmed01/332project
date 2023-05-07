@@ -2,7 +2,6 @@
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import datetime 
-import smtplib
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import re
 
@@ -76,6 +75,7 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable =False)
     discounts = db.Column(db.Float, nullable=False, default=0.0)
     type_name = db.Column(db.String(100), nullable=False)
+    quantity = db.Column(db.Integer, default=0)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
 
@@ -286,24 +286,101 @@ def product(id):
         texts = Comments.query.filter_by(product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts = texts, product=product)
 
-@app.route("/add_product/", methods=['POST', 'GET'])
-def add_product():
+############################# SU functions ######################################
+#Delete one particular costumer from database
+@app.route("/delete_costumer/<int:id>")
+def delete_costumer(id):
+    to_be_deleted = User.query.filter_by(id=id).first()
+    banned_user = Banned(email = to_be_deleted.email, f_name = to_be_deleted.f_name,
+                           l_name = to_be_deleted.l_name)
+    try:
+        db.session.add(banned_user)
+        db.session.delete(to_be_deleted)
+        db.session.commit()
+        return redirect('/manage_costumer')
+    except:
+        return "Costumer wasnt found"
+    
+#Displays all the costumers
+@app.route("/manage_costumer/", methods=['POST','GET'])
+def manage_costumers():
+    costumers = User.query.filter_by(user_type='CU').order_by(User.date_registered)
+    return render_template("managecostumer.html", costumers=costumers)
+
+#Displays all the employees
+@app.route("/manage_emply/", methods=['POST','GET'])
+def manage_emply():
+    if request.method == 'POST':
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        rg_email = request.form['email']
+        rg_password = request.form['password']
+        new_address = request.form['address']
+        new_phonenumber = request.form['phonenumber']
+        new_user = User(email = rg_email, password=rg_password, f_name = first_name,
+                        l_name = last_name, address = new_address, phone_number=new_phonenumber,
+                        user_type='EMPLY')
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect('/manage_emply/')
+        except:
+            return "Employee could not be added"
+    employees = User.query.filter_by(user_type="EMPLY").order_by(User.date_registered)
+    return render_template("manageemply.html", employees = employees)
+
+#Delete an emply from database
+@app.route("/deleteemply/<int:id>", methods=['POST','GET'])
+def deleteemply(id):
+    fired = User.query.filter_by(id=id).first()
+    banned_user = Banned(email = fired.email, f_name = fired.f_name,
+                           l_name = fired.l_name)
+    try:
+        db.session.add(banned_user)
+        db.session.delete(fired)
+        db.session.commit()
+        return redirect('/manage_emply')
+    except:
+        return "Emplyee wasnt found"
+
+#Display information of a particular product
+@app.route("/reviewprod/<int:id>", methods=['POST',"GET"])
+def reviewprod(id):
+    product = Product.query.filter_by(id=id).first()
+    if request.method =='POST':
+        if 'delete-prod' in request.form:
+            try:
+                db.session.delete(product)
+                db.session.commit()
+                return redirect('/manage_product')
+            except:
+                "Something went wrong deleting the product"
+    return render_template("reviewprod.html", product=product)
+
+#Displays all the products
+@app.route("/manage_product/", methods=['POST', 'GET'])
+def manage_product():
+    products = Product.query.order_by(Product.date_registered)
     if request.method=='POST':
         new_name = request.form['name']
         new_descrp = request.form['description']
         new_price = request.form['price']
         new_type_prod = request.form['type-name']
+        new_quantity = request.form['quantity']
         existing_product = Product.query.filter_by(name = new_name).first()
-        new_prod = Product(name=new_name, description=new_descrp, price=new_price, type_name=new_type_prod, discounts=0)
+        new_prod = Product(name=new_name, description=new_descrp, price=new_price, type_name=new_type_prod,
+                           discounts=0, quantity=new_quantity)
         if existing_product:
             return "This product already exists. Try a new one."
         try:
             db.session.add(new_prod)
             db.session.commit()
-            return redirect('/user')
+            return redirect('/manage_product/')
         except:
             return "Something went wrong when adding the product"
-    return render_template("addproduct.html")
+    return render_template("manageproduct.html", products=products)
+
+################ User page #########################
 # route user page
 @app.route("/user/", methods=['POST','GET'])
 @login_required
@@ -346,16 +423,20 @@ def user():
         return render_template("employee.html", applications=curr_applications)
     elif current_user.user_type == "SU":
         if request.method == 'POST':
-            if 'add-product' in request.form:
-                return redirect('/add_product/')
-            elif 'delete-product' in request.form:
-                return "Not available right now"
+            if 'product' in request.form:
+                return redirect('/manage_product/')
+            elif 'emply' in request.form:
+                return redirect('/manage_emply/')
+            elif 'costumer' in request.form:
+                return redirect('/manage_costumer/')
         rejected_applications = Application.query.order_by(Application.rejected==1)
             # display page for admin users
         return render_template("superuser.html", applications=rejected_applications)
     # if user is not logged in, redirect to login page
     return redirect(url_for('login'))
 
+############ Common User application functionality ###########################
+#Rejects the application
 @app.route("/reject/<int:id>", methods=['POST','GET'])
 def reject(id):
     if request.method =='POST':
@@ -369,6 +450,7 @@ def reject(id):
             return "Something went wrong rejecting the user."
     return render_template("memo.html")
 
+#Reviews the application
 @app.route("/review/<int:id>", methods=['POST','GET'])
 def review(id):
     if request.method == 'POST':
@@ -410,8 +492,7 @@ def review(id):
                 except:
                     return "Something went wrong adding the user."
     return redirect('/user') 
-
-# route create custombuilds page
+####################### Costum Builds #############################
 @app.route("/createbuild/")
 def createbuild():
     return render_template("createbuild.html")
@@ -426,22 +507,7 @@ def recbuild():
 def userbuild():
     return render_template("userbuild.html")
 
-# Run the app
-
-@app.route("/createbuild/")
-def createbuild():
-    return render_template("createbuild.html")
-
-# route recommended custombuilds page
-@app.route("/recbuild/")
-def recbuild():
-    return render_template("recbuild.html")
-
-# route user custombuilds page
-@app.route("/userbuild/")
-def userbuild():
-    return render_template("userbuild.html")
-
+### Run application ###
 if __name__ == "__main__":
     app.run(debug=True)
 

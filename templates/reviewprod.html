@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reviewprod.css') }}">
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %}
+    Review product: {{ product.id }}
+{% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+<div class="product-meta">
+    <h2>Product: {{ product.id }}</h2>
+    <div class="product-info">
+        <h4>{{ product.id }}</h4>
+        <h4>{{ product.name }}</h4>
+        <h4>{{ product.description }}</h4>
+        <h4>{{ product.price }}</h4>
+        <h4>{{ product.discounts }}</h4>
+        <h4>{{ product.quantity }}</h4>
+        <h4>{{ product.date_registered }}</h4>
+    </div>
+    <div class="modify-info">
+        <h2>Update information</h2>
+        <form method="POST">
+            <label for="description">Description</label>
+            <input type="text" name="description"/>
+            <label for="price">Price</label>
+            <input type="text" name="price" />
+            <label for="quantity">Quantity</label>
+            <input type="text" name="quantity"/>
+            <button name="update">Update</button>
+        </form>
+    </div>
+    <div class="delete-info">
+        <form method="POST">
+            <button name="delete-prod">Delete</button>
+        </form>
+    </div>
+</div>   
+{% endblock %}

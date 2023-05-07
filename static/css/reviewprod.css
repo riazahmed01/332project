@@ -1,0 +1,75 @@
+.product-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+  }
+  
+  .product-info h4 {
+    margin: 5px 0;
+  }
+  
+  .modify-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  .modify-info form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .modify-info form label {
+    margin-top: 10px;
+  }
+  
+  .modify-info form input[type="text"] {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .modify-info form button[name="update"] {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #0077cc;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .delete-info {
+    margin-top: 20px;
+  }
+  
+  .delete-info form {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .delete-info form button[name="delete-prod"] {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #cc0000;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
