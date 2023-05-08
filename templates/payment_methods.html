@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/payment_methods.css') }}"
+/>
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %}Payment Methods{% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Payment Method</title>
+  </head>
+  <body>
+    <h1>Add Payment Method</h1>
+    <form method="POST" action="/add_payment_method">
+      <label for="card_number">Card Number:</label>
+      <input type="text" name="card_number" required />
+      <br />
+      <label for="card_type">Card Type:</label>
+      <select name="card_type" required>
+        <option value="Visa">Visa</option>
+        <option value="Mastercard">Mastercard</option>
+        <option value="American Express">American Express</option>
+        <option value="Discover">Discover</option>
+      </select>
+      <br />
+      <label for="expiration_date">Expiration Date:</label>
+      <input
+        type="text"
+        name="expiration_date"
+        placeholder="MM/YYYY"
+        required
+      />
+      <br />
+      <label for="cvv">CVV:</label>
+      <input type="text" name="cvv" maxlength="3" required />
+      <br />
+      <input type="submit" value="Add Payment Method" />
+    </form>
+  </body>
+</html>
+
+{% endblock %}

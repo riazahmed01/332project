@@ -13,7 +13,5 @@ my_cursor = mydb.cursor()
 my_cursor.execute("SHOW DATABASES")
 my_cursor.execute("DROP TABLE product")
 
-
-
 for db in my_cursor:
     print(db)

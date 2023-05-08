@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block links %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/deposit.css') }}"
+/>
+{% endblock %} {% block titlePage %} Deposit to Wallet {% endblock %} {% block
+content %} {% for message in get_flashed_messages() %}
+<div class="alert alert-success">{{ message }}</div>
+{% endfor %} {% endblock %}
