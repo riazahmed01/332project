@@ -84,6 +84,7 @@ class Product(db.Model):
     quantity = db.Column(db.Integer, default=0)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
+    rating = db.relationship('Rating', backref='product', lazy=True)
 
 
 class PaymentMethod(db.Model):
@@ -122,9 +123,9 @@ class Specs(db.Model):
     
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    stars = db.Column(db.Integer, default=0)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    product = db.Column(db.String(250), unique=True, nullable=False)
+    rating = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
 
 # route home/index page
 @app.route("/")
@@ -379,17 +380,50 @@ def product(id):
 
         # Add product retrieves the product ID value in Prodcuts
         # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
-        # in Produts
-        elif "rate" in request.form:
-            email_in = request.form['email']
-            product_in = request.form['product']
+        # in Produts 
 
-            user = User.query.filter_by(
-                email=email_in, password=product_in).first()
-            if user:
-                "Rating stars displayed"
-            else:
-                return "Nothing Displayed"
+
+        #We need to store data in the rating table with user.id=current_id and product_id=product_id and rating equal to 0
+        elif "rate-1" in request.form:
+            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
+            if rate:
+                rate.rating = 1
+                try:
+                    db.session.commit()
+                except:
+                    return "Error rating"
+        elif "rate-2" in request.form:
+            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
+            if rate:
+                rate.rating = 2
+                try:
+                    db.session.commit()
+                except:
+                    return "Error rating"
+        elif "rate-3" in request.form:
+            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
+            if rate:
+                rate.rating = 3
+                try:
+                    db.session.commit()
+                except:
+                    return "Error rating"
+        elif "rate-4" in request.form:
+            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
+            if rate:
+                rate.rating = 4
+                try:
+                    db.session.commit()
+                except:
+                    return "Error rating"
+        elif "rate-5" in request.form:
+            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
+            if rate:
+                rate.rating = 5
+                try:
+                    db.session.commit()
+                except:
+                    return "Error rating"
     else:
         texts = Comments.query.filter_by(
             product_id=id).order_by(Comments.date_registered)
