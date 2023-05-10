@@ -486,7 +486,7 @@ def deleteemply(id):
         db.session.commit()
         return redirect('/manage_emply')
     except:
-        return "Emplyee wasnt found"
+        return "Employee wasnt found"
 
 # Display information of a particular product
 @app.route("/reviewprod/<int:id>", methods=['POST', "GET"])
@@ -566,9 +566,16 @@ def user():
             return render_template("user.html", user=current_user)
 
     elif current_user.user_type == "EMPLY":
+        if request.method == 'POST':
+            if 'product' in request.form:
+                return redirect('/manage_product/')
+            elif 'costumer' in request.form:
+                return redirect('/manage_costumer/')
         curr_applications = Application.query.order_by( Application.date_registered)
-        # display page for admin users
+        # display page for employee users
         return render_template("employee.html", applications=curr_applications)
+    # if user is not logged in, redirect to login page
+
     elif current_user.user_type == "SU":
         if request.method == 'POST':
             if 'product' in request.form:

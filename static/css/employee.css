@@ -1,116 +1,105 @@
-/* Employee Dashboard Styles */
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
 
-/* Setup section */
-.setup {
-    margin-bottom: 20px;
-  }
-  
-  .setup a {
-    display: block;
-    background-color: #e6e6e6;
-    padding: 10px;
-    text-align: center;
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .setup a:hover {
-    background-color: #333;
-    color: #fff;
-  }
-  
-  /* Application section */
-  .application {
-    margin-bottom: 20px;
-  }
-  
-  .application h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .application .list {
-    background-color: #f2f2f2;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-  
-  .application .user {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .application .user-meta {
-    flex: 1;
-  }
-  
-  .application .user-meta .name {
-    font-weight: bold;
-    font-size: 18px;
-  }
-  
-  .application .user-meta .email {
-    margin-bottom: 5px;
-  }
-  
-  .application .user-meta .address {
-    margin-bottom: 5px;
-  }
-  
-  .application .user-meta .phonenumber {
-    margin-bottom: 5px;
-  }
-  
-  .application .user-meta .date {
-    font-style: italic;
-    font-size: 14px;
-  }
-  
-  .application form button {
-    background-color: #e6e6e6;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .application form button:hover {
-    background-color: #333;
-    color: #fff;
-  }
-  
-  /* Messages section */
-  .messages {
-    margin-bottom: 20px;
-  }
-  
-  .messages h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  /* Warnings section */
-  .warnings {
-    margin-bottom: 20px;
-  }
-  
-  .warnings h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  /* Compliments section */
-  .compliments {
-    margin-bottom: 20px;
-  }
-  
-  .compliments h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
+.EMPLY-dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.application,
+.manage-costumers,
+.manage-products,
+.manage-builds,
+.messages,
+.compliments,
+.warnings {
+  width: 30%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.application {
+  background-color: #ffe2e2;
+}
+
+.manage-costumers {
+  background-color: #e5f3c0;
+}
+
+.manage-products {
+  background-color: #e3d3ff;
+}
+
+.manage-builds {
+  background-color: #ffd480;
+}
+
+.messages {
+  background-color: #c1d5e0;
+}
+
+.compliments {
+  background-color: #d9f4ed
+}
+
+.warnigns {
+  background-color: #b4b5b2
+}
+
+.application h2,
+.manage-costumers h2,
+.manage-products h2,
+.manage-builds h2,
+.messages h2,
+.compliments h2,
+.warnings h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.user-meta ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-meta ul li p {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4);
+}
   
