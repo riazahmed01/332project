@@ -76,12 +76,16 @@ class Banned(db.Model):
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    model = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(250), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable =False)
+    power = db.Column(db.Integer)
     discounts = db.Column(db.Float, nullable=False, default=0.0)
     type_name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, default=0)
+    in_stock = db.Column(db.Boolean, default = True)
+    form_factor = db.Column(db.String(50))
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
     rating = db.relationship('Rating', backref='product', lazy=True)
@@ -117,10 +121,31 @@ class Taboo(db.Model):
 
 class Specs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    manufacturer = db.Column(db.String(100), nullable=False) 
-    size = db.Column(db.String(100), nullable=False) 
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    cpu_support = db.Column(db.String(200))
+    bios_update = db.Column(db.String(200))
+    m2_support = db.Column(db.String(200))
+    ssd_hard_drive_support = db.Column(db.String(200))
+    pclex16_slots = db.Column(db.String(200))
+    memory_type = db.Column(db.String(200))
+    memory_slots = db.Column(db.String(200))
 
-    
+
+class CustomBuild(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    build_type = db.Column(db.String(50))
+    cpu_id = db.Column(db.Integer)
+    cooling_id = db.Column(db.Integer)
+    motherboard_id = db.Column(db.Integer)
+    memory_id = db.Column(db.Integer)
+    storage_id = db.Column(db.Integer)
+    gpu_id = db.Column(db.Integer)
+    psu_id = db.Column(db.Integer)
+    other_id = db.Column(db.Integer)
+    price = db.Column(db.Float, default = 0)
+    power_supply = db.Column(db.Integer)
+
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer, default=0)
@@ -508,17 +533,32 @@ def manage_product():
     products = Product.query.order_by(Product.date_registered)
     if request.method == 'POST':
         new_name = request.form['name']
+        new_model = request.form['model']
+        power = request.form['power']
+        formfactor = request.form['form-factor']
         new_descrp = request.form['description']
         new_price = request.form['price']
         new_type_prod = request.form['type-name']
         new_quantity = request.form['quantity']
         existing_product = Product.query.filter_by(name=new_name).first()
-        new_prod = Product(name=new_name, description=new_descrp, price=new_price, type_name=new_type_prod,
+        new_prod = Product(name=new_name, model=new_model, power=power,form_factor=formfactor, description=new_descrp,
+                           price=new_price, type_name=new_type_prod,
                            discounts=0, quantity=new_quantity)
+        cpu_support = request.form['cpu-support']
+        bios_update = request.form['bios-update']
+        m2_support = request.form['m2_support']
+        ssd_hard = request.form['ssd/hard-drive']
+        pclex16_slots = request.form['pclex16_slots']
+        memory_type = request.form['memory_type']
+        memory_slots = request.form['memory_slots']
+        new_specs = Specs(cpu_support=cpu_support, bios_update=bios_update,m2_support=m2_support,
+                          ssd_hard_drive_support=ssd_hard,pclex16_slots=pclex16_slots,memory_type=memory_type,memory_slots=memory_slots)
+        
         if existing_product:
             return "This product already exists. Try a new one."
         try:
             db.session.add(new_prod)
+            db.session.add(new_specs)
             db.session.commit()
             return redirect('/manage_product/')
         except:
@@ -647,9 +687,16 @@ def review(id):
     return redirect('/user')
 
 ####################### Costum Builds #############################
-@app.route("/createbuild/")
+@app.route("/createbuild/", methods=['POST','GET'])
 def createbuild():
-    return render_template("createbuild.html")
+    if current_user.is_authenticated:
+        cb = CustomBuild.query.filter_by(creator_id=current_user.id).first()
+        if request.method =='POST':
+            if 'add-cpu' in request.form:
+                return redirect('/cpu')
+        return render_template("createbuild.html", cb=cb)
+    
+    return redirect('/login')
 
 # route recommended custombuilds page
 @app.route("/recbuild/")
