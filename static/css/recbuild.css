@@ -28,12 +28,22 @@
     background-color: lightskyblue;
     border: 1px black;
     color: black;
-    padding: 15px 32px;
+    padding: 15px 15px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 15px;
     cursor: pointer;
     margin: 4px 2px;
-    width: 160px;
+    width: auto;
 }
+
+.createItems img {
+    height: 30px;
+    width: 30px;
+    padding-right: 10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+
