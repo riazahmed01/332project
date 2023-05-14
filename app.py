@@ -49,6 +49,7 @@ class User(db.Model, UserMixin):
     balance = db.Column(db.Float, default=0.00)
     comments = db.relationship('Comments', backref='user', lazy=True)
     payment_methods = db.relationship('PaymentMethod', backref='product', lazy=True)
+
     def __repr__(self):
         return '<Name %r>' % self.f_name
 
@@ -165,13 +166,12 @@ def cooling():
     cooling_products = Product.query.order_by(Product.type_name=='cooling')
     return render_template("cooling.html", products=cooling_products)
 
-
 # route gpu page
 @app.route("/gpu/")
 def gpu():
-
     gpu_products = Product.query.order_by(Product.type_name=='gpu')
     return render_template("gpu.html", products=gpu_products)
+
 
 # route motherboard page
 @app.route("/motherboard/")
@@ -183,18 +183,28 @@ def motherboard():
 # route memory page
 @app.route("/memory/")
 def memory():
+    cpu_products = Product.query.order_by(Product.type_name == 'memory')
+    return render_template("memory.html", products=cpu_products)
+  
+# route memory page
+@app.route("/memory/")
+def memory():
     memory_products = Product.query.order_by(Product.type_name=='memory')
     return render_template("memory.html", products=memory_products)
 
 # route storage page
 @app.route("/storage/")
 def storage():
+    cpu_products = Product.query.order_by(Product.type_name == 'storage')
+    return render_template("storage.html", products=cpu_products)
     storage_products = Product.query.order_by(Product.type_name=='storage')
     return render_template("storage.html", products=storage_products)
 
 # route psu page
 @app.route("/psu/")
 def psu():
+    cpu_products = Product.query.order_by(Product.type_name == 'psu')
+    return render_template("psu.html", products=cpu_products)
     psu_products = Product.query.order_by(Product.type_name=='psu')
     return render_template("psu.html", products=psu_products)
 
@@ -228,9 +238,23 @@ def login():
     if request.method == "POST":
         email_in = request.form['email']
         password_in = request.form['password']
-
-        user = User.query.filter_by(
-            email=email_in, password=password_in).first()
+        user = User.query.filter_by(email=email_in, password=password_in).first()
+        if user.user_type == "CU" and user.warnings == 3:
+            banned_user = Banned(
+                email=user.email,
+                f_name=user.f_name,
+                l_name=user.l_name
+            )
+            db.session.add(banned_user)
+            db.session.commit()
+        if user.user_type == "EMPLY" and user.warnings >=6:
+            banned_user = Banned(
+                email=user.email,
+                f_name=user.f_name,
+                l_name=user.l_name
+            )
+            db.session.add(banned_user)
+            db.session.commit()
         banned = Banned.query.filter_by(email=email_in).first()
         if banned:
             return "Log In failed. Your account has been banned."
@@ -241,6 +265,7 @@ def login():
             return "Log In failed. Invalid Credentials."
     else:
         return render_template("login.html")
+    
 
 
 # route signup page
@@ -280,6 +305,7 @@ def signup():
                 return "Something went wrong with registration. Please, try again."
     else:
         return render_template("signup.html")
+    
 
 # route add_payment_method page
 @app.route('/add_payment_method', methods=['GET', 'POST'])
@@ -326,8 +352,8 @@ def deposit():
         amount = request.form['amount']
         current_user.balance += float(amount)
         db.session.commit()
-        flash(f"Your balance has been updated to ${current_user.balance:.2f}")
-        return redirect(url_for('balance'))
+        success = f"You have successfully deposited ${amount}!"
+        return render_template("deposit.html", success=success)
     else:
         return render_template("deposit.html")
 
@@ -338,16 +364,19 @@ def withdraw():
     if request.method == 'POST':
         amount = request.form['amount']
         if float(amount) > current_user.balance:
-            flash(f"You do not have enough balance to withdraw ${amount}")
+            current_user.warnings += 1  # increment warning counter
+            db.session.commit()
+            error = f"You do not have enough balance to withdraw ${amount}"
+            return render_template("withdraw.html", error=error)
         else:
             current_user.balance -= float(amount)
             db.session.commit()
-            flash(
-                f"Your balance has been updated to ${current_user.balance:.2f}")
-        return redirect(url_for('balance'))
+            success = f"Your balance has been updated to ${current_user.balance:.2f}"
+            return render_template("withdraw.html", success=success)
     else:
         return render_template("withdraw.html")
 
+  
 # route balance page
 @app.route('/balance', methods=['GET', 'POST'])
 @login_required
@@ -629,6 +658,8 @@ def user():
             return render_template("user.html", user=current_user)
 
     elif current_user.user_type == "EMPLY":
+        curr_applications = Application.query.order_by( Application.date_registered)
+        # display page for admin users
         if request.method == 'POST':
             if 'product' in request.form:
                 return redirect('/manage_product/')
