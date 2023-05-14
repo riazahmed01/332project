@@ -28,7 +28,7 @@
             <td>{{ product.name }}</td>
             <td>{{ product.quantity }}</td>
             <td>"Some image to be displayed"</td>
-            <td><a href="{{ url_for('reviewprod', id=product.id) }}">Review</a></td>
+            <td><a href="{{ url_for('reviewprod', id=product.id) }}" style="color:rgb(25, 24, 24)">Review</a></td>
         </tr>
         {% endfor %}
     </table>
@@ -68,6 +68,8 @@
             <input type="text" name="memory_type" />
             <label for="memory_slots">Memory Slots</label>
             <input type="text" name="memory_slots" />
+            <label for="fan_size">Fan Size</label>
+            <input type="text" name="fan_size" />
             <button name="submit">Add</button>
         </form>
     </div>
