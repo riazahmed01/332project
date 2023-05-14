@@ -85,7 +85,6 @@ class Product(db.Model):
     quantity = db.Column(db.Integer, default=0)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
-    rating = db.relationship('Rating', backref='product', lazy=True)
 
 
 class PaymentMethod(db.Model):
@@ -185,12 +184,6 @@ def motherboard():
 def memory():
     cpu_products = Product.query.order_by(Product.type_name == 'memory')
     return render_template("memory.html", products=cpu_products)
-  
-# route memory page
-@app.route("/memory/")
-def memory():
-    memory_products = Product.query.order_by(Product.type_name=='memory')
-    return render_template("memory.html", products=memory_products)
 
 # route storage page
 @app.route("/storage/")
