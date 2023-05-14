@@ -125,7 +125,23 @@ class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    cb_id = db.Column(db.Integer, db.ForeignKey('custombuild.id'), nullable=False)
+
+class CustomBuild(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    build_type = db.Column(db.String(50))
+    cpu_id = db.Column(db.Integer)
+    cooling_id = db.Column(db.Integer)
+    motherboard_id = db.Column(db.Integer)
+    memory_id = db.Column(db.Integer)
+    storage_id = db.Column(db.Integer)
+    gpu_id = db.Column(db.Integer)
+    psu_id = db.Column(db.Integer)
+    other_id = db.Column(db.Integer)
+    price = db.Column(db.Float, default = 0)
+    power_supply = db.Column(db.Integer)
 
 # route home/index page
 @app.route("/")
@@ -384,50 +400,97 @@ def product(id):
 
 
         #We need to store data in the rating table with user.id=current_id and product_id=product_id and rating equal to 0
-        elif "rate-1" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 1
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-2" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 2
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-3" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 3
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-4" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 4
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-5" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 5
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
+        
     else:
         texts = Comments.query.filter_by(
             product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts=texts, product=product)
+    
+
+@app.route("/rating/<int:user_id>/<int:cb_id>", methods=["POST","GET"])
+def rating(user_id, cb_id):
+    rate = Rating.query.filter_by(user_id=user_id, cb_id=cb_id).first()
+    if request.method=='POST': 
+        if "rate-1" in request.form:
+            if rate:
+                rate.rating = 1
+                try:
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except:
+                    return "Error rating"
+            else:
+                rating = Rating(user_id=user_id, cb_id = cb_id, rating = 1)
+                try: 
+                    db.session.add(rating)
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except: 
+                    return 'Something went wrong'
+        elif "rate-2" in request.form:
+            if rate:
+                rate.rating = 2
+                try:
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except:
+                    return "Error rating"
+            else:
+                rating = Rating(user_id=user_id, cb_id = cb_id, rating = 2)
+                try: 
+                    db.session.add(rating)
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except: 
+                    return 'Something went wrong'
+        elif "rate-3" in request.form:
+            if rate:
+                rate.rating = 3
+                try:
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except:
+                    return "Error rating"
+            else:
+                rating = Rating(user_id=user_id, cb_id = cb_id, rating = 3)
+                try: 
+                    db.session.add(rating)
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except: 
+                    return 'Something went wrong'
+        elif "rate-4" in request.form:
+            if rate:
+                rate.rating = 4
+                try:
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except:
+                    return "Error rating"
+            else:
+                rating = Rating(user_id=user_id, cb_id = cb_id, rating = 4)
+                try: 
+                    db.session.add(rating)
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except: 
+                    return 'Something went wrong'
+        elif "rate-5" in request.form:
+            if rate:
+                rate.rating = 5
+                try:
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except:
+                    return "Error rating"
+            else:
+                rating = Rating(user_id=user_id, cb_id = cb_id, rating = 5)
+                try: 
+                    db.session.add(rating)
+                    db.session.commit()
+                    return redirect('/recbuild/')
+                except: 
+                    return 'Something went wrong'
 
 ############################# SU functions ######################################
 # Delete one particular costumer from database
@@ -654,7 +717,8 @@ def createbuild():
 # route recommended custombuilds page
 @app.route("/recbuild/")
 def recbuild():
-    return render_template("recbuild.html")
+    builds = CustomBuild.query.all()
+    return render_template("recbuild.html", builds=builds)
 
 # route user custombuilds page
 @app.route("/userbuild/")
