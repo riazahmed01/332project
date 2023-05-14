@@ -1,3 +1,49 @@
-.h1{
-    color: aqua;
+.createContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
+
+.title{
+    width: auto;
+    height: auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.title h1{
+    font-size: 80px;
+}
+
+.createItems{
+    width: auto;
+    height: auto;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.createItems button {
+    background-color: lightskyblue;
+    border: 1px black;
+    color: black;
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    cursor: pointer;
+    margin: 4px 2px;
+    width: auto;
+}
+
+.createItems img {
+    height: 30px;
+    width: 30px;
+    padding-right: 10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+
