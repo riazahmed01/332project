@@ -334,7 +334,9 @@ def checkout():
             
             return redirect(url_for('checked_out'))
         else:
-            return "Insufficient balance. Please add funds to your balance."
+            current_user.warnings += 1  # increment warning counter
+            db.session.commit()
+            return "You have been warned for Insufficient balance! Please add funds to your balance."
 
     cart_dict = {}
     for item in cart_items:
