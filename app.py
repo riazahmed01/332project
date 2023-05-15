@@ -226,35 +226,49 @@ def other():
     other_products = Product.query.filter_by(type_name = 'other')
     return render_template("pcproducts.html", products=other_products)
 
-# route cart page
 @app.route("/cart/", methods=['GET', 'POST'])
 def cart():
+    # Get all cart items for the current user
     cart_items = Cart.query.filter_by(user_id=current_user.id)
     product_ids = [item.product_id for item in cart_items]
     products = Product.query.filter(Product.id.in_(product_ids)).all()
+    subtotal = sum([product.price * item.quantity for product, item in zip(products, cart_items)])
+    tax = round(subtotal * 0.08875, 2)
     
-    prices = [product.price for product in products]
-    tprice = 0.00
-    for price in prices:
-        tprice+=price
+    # Check if the user has 3 compliments
+    has_discount = False
+    user = User.query.filter_by(id=current_user.id).first()
+    if user.compliments >= 3:
+        has_discount = True
+        discount = round(subtotal * 0.1, 2)
+    else:
+        discount = 0.0
     
+    total_price = round(subtotal + tax - discount, 2)
+   
     cart_dict = {}
     for item in cart_items:
         for product in products:
             if item.product_id == product.id:
                 cart_dict[product] = item
-    return render_template("cart.html", cart=cart_dict, total=tprice)
+    
+    return render_template("cart.html", cart=cart_dict, subtotal=subtotal, tax=tax, total=total_price, has_discount=has_discount, discount=discount)
+
+
+
 
 @app.route("/changecart/<int:id>/", methods=['GET', 'POST'])
 def changecart(id):
     item = Cart.query.filter_by(user_id=current_user.id, product_id=id).first()
+    if item is None:
+        return 'No such cart item exists'
     if request.method == 'POST':
         option = request.form.get('change-q')
         if option == 'add1':
             item.quantity += 1
         elif option == 'remove1' and item.quantity >= 1:
             item.quantity -= 1  
-        if item.quantity==0:
+        if item.quantity == 0:
             db.session.delete(item)  
         try:
             db.session.commit()
@@ -263,6 +277,7 @@ def changecart(id):
             return 'Something went wrong modifying the cart'
     else:
         return 'Invalid request method'
+
 
 @app.route("/deletecart/<int:id>/", methods=['GET', 'POST'])
 def deletecart(id):
@@ -336,16 +351,18 @@ def signup():
         email_validate_pattern = "^\S+@\S+\.\S+$"
 
         # handling post request
-        if rg_password1 != rg_password2:
+        if not first_name or not last_name or not rg_email or not rg_password1 or not rg_password2 or not new_address or not new_phonenumber:
+            return "All fields are required"
+        elif rg_password1 != rg_password2:
             return 'Passwords do not match'
         elif len(rg_password1) < 8:
             return 'Password must be at least 8 characters'
-        # elif len(rg_email) < 4:
-        elif not (bool(re.match(email_validate_pattern, rg_email))):
-            #   return 'Email must be at least 3 characters'
+        elif not re.match(r"^\S+@\S+\.\S+$", rg_email):
             return 'Invalid format of email'
-        elif len(new_phonenumber) > 10:
-            return 'Invalid format of phone number'
+        elif len(new_phonenumber) != 10:
+            return 'Phone number must be 10 digits'
+        elif not new_phonenumber.isdigit():
+            return 'Phone number must be digits only'
         else:
             new_application = Application(email=rg_email, password=rg_password1, f_name=first_name, l_name=last_name, address=new_address, phone_number=new_phonenumber)
             existing_user = Application.query.filter_by(email=rg_email).first()
@@ -467,21 +484,22 @@ def product(id):
                 return "Comment was longer than 300 characters"
         elif "add-product" in request.form:
             q = request.form['amount']
-            new_c = Cart(user_id=current_user.id, product_id=id, quantity=q)
+            existing_item = Cart.query.filter_by(user_id=current_user.id, product_id=id).first()
+            if existing_item:
+                existing_item.quantity += int(q)
+            else:
+                new_p = Cart(user_id=current_user.id, product_id=id, quantity=q)
+                db.session.add(new_p)
             try:
-                db.session.add(new_c)
                 db.session.commit()
                 return redirect('/cart')
             except:
                 return "Invalid product"
-
-        # Add product retrieves the product ID value in Prodcuts
-        # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
-        # in Produts 
     else:
         texts = Comments.query.filter_by(
             product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts=texts, product=product)
+
 
 ############################# SU functions ######################################
 @app.route('/manage_builds/', methods=["POST",'GET'])
