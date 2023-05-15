@@ -12,7 +12,28 @@
 
 <!--main content of the page-->
 {% block content %}
-
-    <h1>user cart goes heree</h1>
+    {% for product, item in cart.items() %}
+    <div class="cart-item">
+        <h1>Product</h1>
+        <div class="productInf">
+            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            <p id="name">{{ product.name }}</p>
+        </div>
+        <p>Price: {{ product.price }}</p>
+        <p>Quantity: {{ item.quantity }}</p>
+        <a href="{{ url_for('product', id=product.id) }}" style="color:rgb(25, 24, 24)">View Product</a>
+        <a href="{{ url_for('deletecart', id=item.id) }}" style="color:rgb(25, 24, 24)">Remove Product</a>
+        <form action="{{ url_for('changecart', id=product.id) }}" method="POST">
+            <select name="change-q">
+                <option value="add1">Add 1</option>
+                <option value="remove1">Remove 1</option>
+            </select>
+            <input type="submit" value="Make changes">
+        </form>
+    </div>
+    {% endfor %}
+    <div class="total-price">
+        <h3>{{ total }}</h3>
+    </div>
     
 {% endblock %}

@@ -25,15 +25,15 @@
         <a href="{{ url_for('index') }}"><i class="fa fa-fw fa-home"></i>Home |<a>
         <a href="{{ url_for('custombuild') }}">Custom Builds |<a>
         <a href="{{ url_for('cpu') }}">CPU |<a>
-        <a href="">Cooling |<a>
-        <a href="">GPU |<a>
-        <a href="">Motherboard |<a>
-        <a href="">Memory |<a>
-        <a href="">Storage |<a>
-        <a href="">PSU |<a>
-        <a href="">Case |<a>
-        <a href="">Laptops |<a>
-        <a href="">Other<a>
+        <a href="{{ url_for('cooling') }}">Cooling |<a>
+        <a href="{{ url_for('gpu') }}">GPU |<a>
+        <a href="{{ url_for('motherboard') }}">Motherboard |<a>
+        <a href="{{ url_for('memory') }}">Memory |<a>
+        <a href="{{ url_for('storage') }}">Storage |<a>
+        <a href="{{ url_for('psu') }}">PSU |<a>
+        <a href="{{ url_for('case') }}">Case |<a>
+        <a href="{{ url_for('laptops') }}">Laptops |<a>
+        <a href="{{ url_for('other') }}">Other<a>
     </div>
     
     <div id="nav_right">
@@ -41,7 +41,7 @@
             <a href="{{ url_for('cart') }}" style="color:white">Cart |<a>
             <a href="{{ url_for('user') }}" style="color:white">My Account |</a>
             <a href="{{ url_for('logout') }}" style="color:white">Log Out  |</a>
-            <a href="{{ url_for('employee') }}" style="color: white">Employee Dashboard </a>
+            
         {% else %}
             <a href="{{ url_for('login') }}" style="color:white">Log in/Sign up</a>
         {% endif %}

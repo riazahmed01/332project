@@ -38,7 +38,7 @@
             <td>{{ emply.compliments }}</td>
             <td>{{ emply.warnings }}</td>
             <td><a href="">Promote</a></td>
-            <td><a href="{{ url_for('deleteemply', id=emply.id) }}">Fire</a></td>
+            <td><a href="{{ url_for('deleteemply', id=emply.id) }}"style="color:rgb(25, 24, 24)">Fire</a></td>
         </tr>
         {% endfor %}
     </table>
