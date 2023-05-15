@@ -103,26 +103,6 @@
       </form>
     </div>
 
-    <section>
-      <h2>Current Balance</h2>
-      <p>Current Balance: ${{ current_user.balance }}</p>
-    </section>
-    
-
-  <div class="transaction-buttons">
-    <!-- withdraw and deposit buttons -->
-    <div class="withdraw-deposit-buttons">
-      <form method="GET" action="{{ url_for('withdraw') }}">
-       <button style="font-size:100%;" type="submit">Withdraw</button>
-      </form>
-      <form method="GET" action="{{ url_for('deposit') }}">
-       <button style="font-size:100%;" type="submit">Deposit</button>
-      </form>
-    </div>
-  </div>
-
-
-
     <div class="account-information">
       <h2>Account Settings</h2>
       <form method="POST">

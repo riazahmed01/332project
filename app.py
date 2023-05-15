@@ -49,7 +49,6 @@ class User(db.Model, UserMixin):
     balance = db.Column(db.Float, default=0.00)
     comments = db.relationship('Comments', backref='user', lazy=True)
     payment_methods = db.relationship('PaymentMethod', backref='product', lazy=True)
-
     def __repr__(self):
         return '<Name %r>' % self.f_name
 
@@ -85,7 +84,6 @@ class Product(db.Model):
     quantity = db.Column(db.Integer, default=0)
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
-    rating = db.relationship('Rating', backref='product', lazy=True)
 
 
 class PaymentMethod(db.Model):
@@ -124,9 +122,9 @@ class Specs(db.Model):
     
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.Integer, default=0)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    stars = db.Column(db.Integer, default=0)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    product = db.Column(db.String(250), unique=True, nullable=False)
 
 # route home/index page
 @app.route("/")
@@ -147,56 +145,44 @@ def cpu():
 # route cooling page
 @app.route("/cooling/")
 def cooling():
-    cooling_products = Product.query.order_by(Product.type_name=='cooling')
-    return render_template("cooling.html", products=cooling_products)
+    cpu_products = Product.query.order_by(Product.type_name == 'cooling')
+    return render_template("cooling.html", products=cpu_products)
 
 # route gpu page
 @app.route("/gpu/")
 def gpu():
-    gpu_products = Product.query.order_by(Product.type_name=='gpu')
-    return render_template("gpu.html", products=gpu_products)
-
+    cpu_products = Product.query.order_by(Product.type_name == 'gpu')
+    return render_template("gpu.html", products=cpu_products)
 
 # route motherboard page
 @app.route("/motherboard/")
 def motherboard():
-    motherboard_products = Product.query.order_by(Product.type_name=='motherboard')
-    return render_template("motherboard.html", products=motherboard_products)
-
+    cpu_products = Product.query.order_by(Product.type_name == 'motherboard')
+    return render_template("motherboard.html", products=cpu_products)
 
 # route memory page
 @app.route("/memory/")
 def memory():
     cpu_products = Product.query.order_by(Product.type_name == 'memory')
     return render_template("memory.html", products=cpu_products)
-  
-# route memory page
-@app.route("/memory/")
-def memory():
-    memory_products = Product.query.order_by(Product.type_name=='memory')
-    return render_template("memory.html", products=memory_products)
 
 # route storage page
 @app.route("/storage/")
 def storage():
     cpu_products = Product.query.order_by(Product.type_name == 'storage')
     return render_template("storage.html", products=cpu_products)
-    storage_products = Product.query.order_by(Product.type_name=='storage')
-    return render_template("storage.html", products=storage_products)
 
 # route psu page
 @app.route("/psu/")
 def psu():
     cpu_products = Product.query.order_by(Product.type_name == 'psu')
     return render_template("psu.html", products=cpu_products)
-    psu_products = Product.query.order_by(Product.type_name=='psu')
-    return render_template("psu.html", products=psu_products)
 
 # route case page
 @app.route("/case/")
 def case():
-    case_products = Product.query.order_by(Product.type_name=='case')
-    return render_template("case.html", products=case_products)
+    cpu_products = Product.query.order_by(Product.type_name == 'case')
+    return render_template("case.html", products=cpu_products)
 
 
 # route cart page
@@ -222,23 +208,9 @@ def login():
     if request.method == "POST":
         email_in = request.form['email']
         password_in = request.form['password']
-        user = User.query.filter_by(email=email_in, password=password_in).first()
-        if user.user_type == "CU" and user.warnings == 3:
-            banned_user = Banned(
-                email=user.email,
-                f_name=user.f_name,
-                l_name=user.l_name
-            )
-            db.session.add(banned_user)
-            db.session.commit()
-        if user.user_type == "EMPLY" and user.warnings >=6:
-            banned_user = Banned(
-                email=user.email,
-                f_name=user.f_name,
-                l_name=user.l_name
-            )
-            db.session.add(banned_user)
-            db.session.commit()
+
+        user = User.query.filter_by(
+            email=email_in, password=password_in).first()
         banned = Banned.query.filter_by(email=email_in).first()
         if banned:
             return "Log In failed. Your account has been banned."
@@ -249,7 +221,6 @@ def login():
             return "Log In failed. Invalid Credentials."
     else:
         return render_template("login.html")
-    
 
 
 # route signup page
@@ -289,7 +260,6 @@ def signup():
                 return "Something went wrong with registration. Please, try again."
     else:
         return render_template("signup.html")
-    
 
 # route add_payment_method page
 @app.route('/add_payment_method', methods=['GET', 'POST'])
@@ -336,8 +306,8 @@ def deposit():
         amount = request.form['amount']
         current_user.balance += float(amount)
         db.session.commit()
-        success = f"You have successfully deposited ${amount}!"
-        return render_template("deposit.html", success=success)
+        flash(f"Your balance has been updated to ${current_user.balance:.2f}")
+        return redirect(url_for('balance'))
     else:
         return render_template("deposit.html")
 
@@ -348,19 +318,16 @@ def withdraw():
     if request.method == 'POST':
         amount = request.form['amount']
         if float(amount) > current_user.balance:
-            current_user.warnings += 1  # increment warning counter
-            db.session.commit()
-            error = f"You do not have enough balance to withdraw ${amount}"
-            return render_template("withdraw.html", error=error)
+            flash(f"You do not have enough balance to withdraw ${amount}")
         else:
             current_user.balance -= float(amount)
             db.session.commit()
-            success = f"Your balance has been updated to ${current_user.balance:.2f}"
-            return render_template("withdraw.html", success=success)
+            flash(
+                f"Your balance has been updated to ${current_user.balance:.2f}")
+        return redirect(url_for('balance'))
     else:
         return render_template("withdraw.html")
 
-  
 # route balance page
 @app.route('/balance', methods=['GET', 'POST'])
 @login_required
@@ -409,50 +376,17 @@ def product(id):
 
         # Add product retrieves the product ID value in Prodcuts
         # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
-        # in Produts 
+        # in Produts
+        elif "rate" in request.form:
+            email_in = request.form['email']
+            product_in = request.form['product']
 
-
-        #We need to store data in the rating table with user.id=current_id and product_id=product_id and rating equal to 0
-        elif "rate-1" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 1
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-2" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 2
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-3" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 3
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-4" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 4
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-5" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 5
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
+            user = User.query.filter_by(
+                email=email_in, password=product_in).first()
+            if user:
+                "Rating stars displayed"
+            else:
+                return "Nothing Displayed"
     else:
         texts = Comments.query.filter_by(
             product_id=id).order_by(Comments.date_registered)
@@ -515,7 +449,7 @@ def deleteemply(id):
         db.session.commit()
         return redirect('/manage_emply')
     except:
-        return "Employee wasnt found"
+        return "Emplyee wasnt found"
 
 # Display information of a particular product
 @app.route("/reviewprod/<int:id>", methods=['POST', "GET"])
@@ -597,16 +531,7 @@ def user():
     elif current_user.user_type == "EMPLY":
         curr_applications = Application.query.order_by( Application.date_registered)
         # display page for admin users
-        if request.method == 'POST':
-            if 'product' in request.form:
-                return redirect('/manage_product/')
-            elif 'costumer' in request.form:
-                return redirect('/manage_costumer/')
-        curr_applications = Application.query.order_by( Application.date_registered)
-        # display page for employee users
         return render_template("employee.html", applications=curr_applications)
-    # if user is not logged in, redirect to login page
-
     elif current_user.user_type == "SU":
         if request.method == 'POST':
             if 'product' in request.form:

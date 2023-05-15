@@ -1,46 +1,9 @@
-{% extends 'base.html' %}
-
-<!--links-->
-{% block links %}
-
+{% extends 'base.html' %} {% block links %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/deposit.css') }}"
 />
-{% endblock links %}
-<!--title of the page-->
-{% block titlePage %} Withdraw from Wallet {% endblock titlePage %}
-
-<!--main content of the page-->
-{% block content %}
-
-<!--Flash-->
-{% for message in get_flashed_messages() %} {{message}} {% endfor %}
-
-<div class="deposit">
-  <h1>Deposit from Wallet</h1>
-  <form action="{{ url_for('deposit') }}" method="POST">
-    <label for="currBal">Current Balance: ${{ current_user.balance }}</label>
-    <label for="amount">Enter Amount:</label>
-    <input type="number" id="amount" name="amount" step="0.01" required />
-    {% if error %}
-    <p class="error">{{ error }}</p>
-    {% endif %}
-    {% if success %}
-    <p class="success">{{ success }}</p>
-    {% endif %}
-    <label for="paymentMethod">Payment Method:</label>
-    <select id="paymentMethod" name="paymentMethod" required>
-      <option value="" selected disabled>Select Payment Method</option>
-      {% for payment_method in current_user.payment_methods %}
-      <option value="{{ payment_method.id }}">
-        {{ payment_method.card_type }} ending in {{
-        payment_method.card_number[-4:] }}
-      </option>
-      {% endfor %}
-    </select>
-
-    <button type="submit">Deposit</button>
-  </form>
-</div>
-{% endblock %}
+{% endblock %} {% block titlePage %} Deposit to Wallet {% endblock %} {% block
+content %} {% for message in get_flashed_messages() %}
+<div class="alert alert-success">{{ message }}</div>
+{% endfor %} {% endblock %}
