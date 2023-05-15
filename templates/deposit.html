@@ -29,9 +29,9 @@
     {% if success %}
     <p class="success">{{ success }}</p>
     {% endif %}
-    <label for="paymentMethod">Payment Method:</label>
+    <label for="paymentMethod">Deposit Method:</label>
     <select id="paymentMethod" name="paymentMethod" required>
-      <option value="" selected disabled>Select Payment Method</option>
+      <option value="" selected disabled>Select Deposit Method</option>
       {% for payment_method in current_user.payment_methods %}
       <option value="{{ payment_method.id }}">
         {{ payment_method.card_type }} ending in {{
