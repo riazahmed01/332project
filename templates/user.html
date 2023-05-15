@@ -28,27 +28,22 @@
     <div class="order-information">
       <h2>My Orders</h2>
       <table>
-        <tr>
-          <th>Order Date</th>
-          <th>Order Number</th>
-          <th>Order Total</th>
-          <th>Status</th>
-        </tr>
-        <tr>
-          <td>[Insert order date here]</td>
-          <td>[Insert order number here]</td>
-          <td>[Insert order total here]</td>
-          <td>[Insert order status here]</td>
-        </tr>
-        <tr>
-          <td>[Insert order date here]</td>
-          <td>[Insert order number here]</td>
-          <td>[Insert order total here]</td>
-          <td>[Insert order status here]</td>
-        </tr>
-        <!-- Add more rows for additional orders -->
+          <tr>
+              <th>Order Date</th>
+              <th>Order Number</th>
+              <th>Order Total</th>
+              <th>Status</th>
+          </tr>
+          {% for purchase in purchases %}
+          <tr>
+              <td>{{ purchase.date_purchased }}</td>
+              <td>{{ purchase.cb_id }}</td>
+              <td>${{ purchase.order_total }}</td>
+              <td>Order Placed</td>
+          </tr>
+          {% endfor %}
       </table>
-    </div>
+  </div>
     <div class="wishlist-information">
       <h2>My Wishlist</h2>
       <ul>
