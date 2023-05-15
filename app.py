@@ -661,7 +661,7 @@ def user():
 
     elif current_user.user_type == "EMPLY":
         curr_applications = Application.query.order_by( Application.date_registered)
-        # display page for admin users
+        # display page for employee users
         if request.method == 'POST':
             if 'product' in request.form:
                 return redirect('/manage_product/')
