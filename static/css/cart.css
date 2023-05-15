@@ -1,3 +1,98 @@
-h1 {
-    color: navy;
-  }
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+button {
+  display: inline-block;
+  padding: 0.3em 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  border: none;
+  background-color: #ddd;
+  color: #333;
+}
+
+button:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+td form {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+td form:first-of-type {
+  margin-right: 0.5em;
+}
+
+td strong {
+  font-weight: bold;
+}
+
+tr:last-of-type td {
+  text-align: right;
+  padding-top: 1em;
+  font-weight: bold;
+}
+
+tr:last-of-type td:first-of-type {
+  text-align: left;
+}
+
+tr:last-of-type td:nth-of-type(2) {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+tr:last-of-type td:last-of-type {
+  padding-right: 0;
+}
+
+.checkout-button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* Cart Page */
+.cart-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-top: 20px;
+}
+
+.discount {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 5px;
+}
