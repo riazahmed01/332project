@@ -8,7 +8,7 @@ mydb = mysql.connector.connect(
 
 my_cursor = mydb.cursor()
 
-#my_cursor.execute("CREATE DATABASE ComputerStore")
+my_cursor.execute("CREATE DATABASE ComputerStore")
 #my_cursor.execute("DROP DATABASE comments")
 my_cursor.execute("SHOW DATABASES")
 my_cursor.execute("DROP TABLE product")
