@@ -21,10 +21,10 @@
 
         <p class="price">USD ${{ product.price }}</p>
 
-        <form method="POST">
-            <input type="number" name="amount" value="1">
+        <form action="{{ url_for('cart') }}" method="POST">
             <button name="add-product">Add to Cart</button>
         </form>
+
         <p class="des">{{ product.description }}</p>
 
     </div>

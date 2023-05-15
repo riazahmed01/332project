@@ -18,155 +18,109 @@
     <div class="title">
         <h1>Create a Custom Build</h1>
     </div>
-    
+
     <div class="createItems">
         <h1>CPU</h1>
-        {% if cpu %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ cpu.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: {{ cpu.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='cpu') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='cpu') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
-    
+
     <div class="createItems">
         <h1>CPU Cooler</h1>
-        {% if cooling %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ cooling.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ cooling.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='cooling') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='cooling') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
 
     <div class="createItems">
         <h1>Motherboard</h1>
-        {% if motherboard %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ motherboard.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ motherboard.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='motherboard') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='motherboard') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
 
     <div class="createItems">
         <h1>Memory</h1>
-        {% if memory %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ memory.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ memory.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='memory') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='memory') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
 
     <div class="createItems">
         <h1>Storage</h1>
-        {% if storage %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ storage.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ storage.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='storage') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='storage') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
     
     <div class="createItems">
         <h1>Video Card</h1>
-        {% if gpu %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ gpu.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ gpu.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='gpu') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='gpu') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
 
     <div class="createItems">
         <h1>Power Supply</h1>
-        {% if psu %}
-        
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ psu.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ psu.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='psu') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='psu') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
     
     <div class="createItems">
-        <h1>Case</h1>
-        {% if case %}
-        
+        <h1>Other</h1>
         <div class="productInf">
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ case.name }}</p>
+            <p id="name">Item Name</p>
         </div>
-        <p>Price: ${{ case.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='case') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
-        {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='case') }}" style="color:rgb(25, 24, 24)">Add Product</a>
-        {% endif %}
+        <p>Price: $99.99</p>
+        <button id="add-item">Add Item</button>
+        <button id="remove-item">Remove Item</button>
     </div>
 
     <div class="power">
-        <h1> Estimated Wattage: {{ power }}W</h1>
+        <h1> Estimated Wattage: 1000W</h1>
     </div>
 
     <div class="compatibility">
         <h1>Compatibility:</h1>
-        {% if compatibility=='Okay' %}
         <div class="compItem1"> <p>Good: no issues found</p></div>
-        {% elif compatibility=='BIOS' %}
         <div class="compItem2"> <p>Warning: may require bios update</p></div>
-        {% elif compatibility=='Error' %}
-        <div class="compItem3"> <p>Issue: issue detected. One or more items may be out of stock or are not compatible</p></div>
-        {% else %}
-        {% endif %}
+        <div class="compItem3"> <p>Issue: issue detected, one or more items may be out of stock</p></div>
     </div>
     
     <div class="total">
-        <h1>Total: ${{ "%.2f" % price }}</h1>
-        {% if compatibility=='Okay' %}
-        <form method="POST">
-            <p>Would you like to post your configuration?</p>
-            <select name="option">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select><br><br>
-            <button name="add-item">Add to Cart</button>
-        </form>
-        {% endif %}
+        <h1>Total: $12345</h1>
+        <button id="add-item">Add to Cart</button>
     </div>
 
 </div>

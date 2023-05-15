@@ -38,7 +38,7 @@
             <td>{{ costumer.compliments }}</td>
             <td>{{ costumer.warnings }}</td>
             <td><a href="">Give VIP</a></td>
-            <td><a href="{{ url_for('delete_costumer', id=costumer.id) }}" style="color:rgb(25, 24, 24)">Ban</a></td>
+            <td><a href="{{ url_for('delete_costumer', id=costumer.id) }}">Ban</a></td>
         </tr>
         {% endfor %}
     </table> 
