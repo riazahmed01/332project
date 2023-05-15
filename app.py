@@ -566,6 +566,11 @@ def user():
             return render_template("user.html", user=current_user)
 
     elif current_user.user_type == "EMPLY":
+<<<<<<< Updated upstream
+=======
+        curr_applications = Application.query.order_by( Application.date_registered)
+        # display page for employee users
+>>>>>>> Stashed changes
         if request.method == 'POST':
             if 'product' in request.form:
                 return redirect('/manage_product/')
