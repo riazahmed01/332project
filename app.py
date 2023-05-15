@@ -377,7 +377,6 @@ def balance():
 
     return render_template('balance.html', balance=current_user.balance, payment_methods=payment_methods)
 
-
 # route product page
 @app.route("/product/<int:id>", methods=['POST', 'GET'])
 def product(id):
