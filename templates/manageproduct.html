@@ -28,7 +28,7 @@
             <td>{{ product.name }}</td>
             <td>{{ product.quantity }}</td>
             <td>"Some image to be displayed"</td>
-            <td><a href="{{ url_for('reviewprod', id=product.id) }}">Review</a></td>
+            <td><a href="{{ url_for('reviewprod', id=product.id) }}" style="color:rgb(25, 24, 24)">Review</a></td>
         </tr>
         {% endfor %}
     </table>
@@ -40,14 +40,36 @@
         <form METHOD="POST">
             <label for="name">Product name</label>
             <input type="text" name="name" />
+            <label for="model">Product model</label>
+            <input type="text" name="model" />
+            <label for="power">Product power</label>
+            <input type="text" name="power" />
             <label for="description">Description</label>
             <input type="text" name="description" />
+            <label for="form-factor">Product form factor</label>
+            <input type="text" name="form-factor" />
             <label for="price">Price</label>
             <input type="text" name="price" />
             <label for="type-name">Type</label>
             <input type="text" name="type-name" />
             <label for="quantity">Quantity</label>
             <input type="text" name="quantity"/>
+            <label for="cpu-support">CPU Support</label>
+            <input type="text" name="cpu-support" />
+            <label for="bios-update">BIOS update</label>
+            <input type="text" name="bios-update" />
+            <label for="m2_support">M.2 Support</label>
+            <input type="text" name="m2_support" />
+            <label for="ssd/hard-drive">SSD/Hard-Drive</label>
+            <input type="text" name="ssd/hard-drive" />
+            <label for="pclex16_slots">PCle x 16 Slots</label>
+            <input type="text" name="pclex16_slots" />
+            <label for="memory_type">Memory Type</label>
+            <input type="text" name="memory_type" />
+            <label for="memory_slots">Memory Slots</label>
+            <input type="text" name="memory_slots" />
+            <label for="fan_size">Fan Size</label>
+            <input type="text" name="fan_size" />
             <button name="submit">Add</button>
         </form>
     </div>
