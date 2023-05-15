@@ -18,7 +18,7 @@
     <div class="application">
         <h2>Review rejections</h2>
         {% for application in applications %}
-            {% if application.rejected==1 %}
+            {% if application.rejected!=1 %}
                 <div class="list">
                     <div class="user-meta">
                         <ul>
@@ -37,14 +37,11 @@
                             <li>
                                 <p>{{ application.date_registered }}</p>
                             </li>
-                            <li>
-                                <p><b>Reason</b>: {{ application.memo }}</p>
-                            </li>
                         </ul>
                     </div>
                     <form action="{{ url_for('review', id=application.id) }}" method="POST">
-                        <button name="aprove-EMPLY">Aprove</button>
-                        <button name="disaprove-EMPLY">Disaprove</button>
+                        <button name="accept-EMPLY">Accept</button>
+                        <button name="reject-EMPLY">Reject</button>
                     </form>
                 </div>
             {% endif %}
@@ -78,3 +75,5 @@
         <h2>Warnings</h2>
     </div>
 </div>
+
+{% endblock %}
