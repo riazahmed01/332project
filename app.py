@@ -102,15 +102,16 @@ class PaymentMethod(db.Model):
     def __repr__(self):
         return f'<PaymentMethod {self.card_type} {self.card_number}>'
 
-class Shopping(db.Model):
+class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    product = db.Column(db.Integer)
-    
+    product_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    quantity = db.Column(db.Integer, default=1)
 
 class Purchased(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    product = db.Column(db.String(250), unique=True, nullable=False)
+    user_id = db.Column(db.Integer)
+    cb_id = db.Column(db.Integer)
     date_purchased = db.Column(db.Date, default=datetime.date.today())
 
 
@@ -224,10 +225,54 @@ def laptops():
 def other():
     other_products = Product.query.filter_by(type_name = 'other')
     return render_template("pcproducts.html", products=other_products)
+
 # route cart page
-@app.route("/cart/")
+@app.route("/cart/", methods=['GET', 'POST'])
 def cart():
-    return render_template("cart.html")
+    cart_items = Cart.query.filter_by(user_id=current_user.id)
+    product_ids = [item.product_id for item in cart_items]
+    products = Product.query.filter(Product.id.in_(product_ids)).all()
+    
+    prices = [product.price for product in products]
+    tprice = 0.00
+    for price in prices:
+        tprice+=price
+    
+    cart_dict = {}
+    for item in cart_items:
+        for product in products:
+            if item.product_id == product.id:
+                cart_dict[product] = item
+    return render_template("cart.html", cart=cart_dict, total=tprice)
+
+@app.route("/changecart/<int:id>/", methods=['GET', 'POST'])
+def changecart(id):
+    item = Cart.query.filter_by(user_id=current_user.id, product_id=id).first()
+    if request.method == 'POST':
+        option = request.form.get('change-q')
+        if option == 'add1':
+            item.quantity += 1
+        elif option == 'remove1' and item.quantity >= 1:
+            item.quantity -= 1  
+        if item.quantity==0:
+            db.session.delete(item)  
+        try:
+            db.session.commit()
+            return redirect('/cart/')
+        except:
+            return 'Something went wrong modifying the cart'
+    else:
+        return 'Invalid request method'
+
+@app.route("/deletecart/<int:id>/", methods=['GET', 'POST'])
+def deletecart(id):
+    item = Cart.query.get(id)
+    try:
+        db.session.delete(item)
+        db.session.commit()
+        return redirect('/cart/')
+    except:
+        return 'Something went wrong deleting the product'
 
 # route logout page
 @app.route('/logout', methods=['GET', 'POST'])
@@ -403,68 +448,30 @@ def product(id):
             except:
                 return "Comment was longer than 300 characters"
         elif "add-product" in request.form:
-            # productTable = Product.query.filter_by(id = NULL).first()
-            # new_product = Shopping(product = productTable)
-            product = request.form['product']
+            q = request.form['amount']
+            new_c = Cart(user_id=current_user.id, product_id=id, quantity=q)
             try:
-                # db.session.add(new_product)
+                db.session.add(new_c)
                 db.session.commit()
-                return "Added to cart"
+                return redirect('/cart')
             except:
                 return "Invalid product"
 
         # Add product retrieves the product ID value in Prodcuts
         # Then it creates a new column in Shopping and sets the product atrribute in shapping to the product atrribute
         # in Produts 
-
-
-        #We need to store data in the rating table with user.id=current_id and product_id=product_id and rating equal to 0
-        elif "rate-1" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 1
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-2" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 2
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-3" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 3
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-4" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 4
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
-        elif "rate-5" in request.form:
-            rate = Rating.query.filter_by(user_id = current_user.id, product_id = id).first()
-            if rate:
-                rate.rating = 5
-                try:
-                    db.session.commit()
-                except:
-                    return "Error rating"
     else:
         texts = Comments.query.filter_by(
             product_id=id).order_by(Comments.date_registered)
         return render_template("product.html", texts=texts, product=product)
 
 ############################# SU functions ######################################
+@app.route('/manage_builds/', methods=["POST",'GET'])
+def manage_builds():
+    
+    builds = CustomBuild.query.all()
+    return render_template('managebuilds.html', builds)
+
 # Delete one particular costumer from database
 @app.route("/delete_costumer/<int:id>")
 def delete_costumer(id):
@@ -640,6 +647,8 @@ def user():
                 return redirect('/manage_product/')
             elif 'costumer' in request.form:
                 return redirect('/manage_costumer/')
+            elif 'builds' in request.form:
+                return redirect('/manage_builds/')
         curr_applications = Application.query.order_by( Application.date_registered)
         # display page for employee users
         return render_template("employee.html", applications=curr_applications)
@@ -677,13 +686,13 @@ def reject(id):
             return "Something went wrong rejecting the user."
     return render_template("memo.html")
 
-# Reviews the application
+# Reviews the applicationD
 @app.route("/review/<int:id>", methods=['POST', 'GET'])
 def review(id):
     if request.method == 'POST':
         if "accept-EMPLY" in request.form or "reject-EMPLY" in request.form:
             if "accept-EMPLY" in request.form:
-                to_be_added = Application.query.filter_by(id=id).first()
+                to_be_added = Application.query.get(id)
                 new_user = User(email=to_be_added.email, password=to_be_added.password, f_name=to_be_added.f_name, l_name=to_be_added.l_name, address=to_be_added.address, phone_number=to_be_added.phone_number)
                 try:
                     db.session.add(new_user)
@@ -843,15 +852,39 @@ def addpart(id,type):
             except: return'Something went wrong'
 
     return render_template('pickproduct.html', products=products)
+@app.route('/addcart/<int:cb_id>', methods=['POST','GET'])
+def addcart(cb_id):
+    cb = CustomBuild.query.get(cb_id)
+     # create a new Cart object for each product in the custom build
+    cart_items = [
+        Cart(product_id=cb.cpu_id, user_id=current_user.id),
+        Cart(product_id=cb.cooling_id, user_id=current_user.id),
+        Cart(product_id=cb.motherboard_id, user_id=current_user.id),
+        Cart(product_id=cb.memory_id, user_id=current_user.id),
+        Cart(product_id=cb.storage_id, user_id=current_user.id),
+        Cart(product_id=cb.gpu_id, user_id=current_user.id),
+        Cart(product_id=cb.psu_id, user_id=current_user.id),
+        Cart(product_id=cb.other_id, user_id=current_user.id)
+    ]
+
+    # add each cart item to the database session
+    try:
+        for item in cart_items:
+            db.session.add(item)
+
+        db.session.commit()
+    except:
+        return "Something went wrong adding the build"
+    return redirect('/cart')
 
 @app.route("/createbuild/<int:id>", methods=['POST','GET'])
 def createbuild(id):
     if current_user.is_authenticated:
         if request.method=='POST':
-            if 'yes' in request.form:
-                #leave the custom build and add it to the shopping cart
-                return 'something'
-            elif 'no' in request.form:
+            post = request.form['option']
+            if 'yes' == post:
+                return redirect(url_for('addcart', cb_id=id))
+            elif 'no' == post:
                 #add it to the shopping cart and delete the custom build
                 return 'something'
 
