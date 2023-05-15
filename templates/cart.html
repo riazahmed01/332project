@@ -79,8 +79,9 @@ Cart
         </tr>
       </table>
     </div>
-    <button class="checkout-button">Checkout</button>
+    <a href="{{ url_for('checkout') }}" class="checkout-button">Checkout</a>
     <p><a style="color:black;" href="/">Continue Shopping</a></p>
+    
   {% else %}
     <p>Your cart is empty.</p>
     <p><a href="/">Start Shopping</a></p>

@@ -113,7 +113,9 @@ class Purchased(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
     cb_id = db.Column(db.Integer)
+    order_total = db.Column(db.Float)
     date_purchased = db.Column(db.Date, default=datetime.date.today())
+    
 
 
 class Taboo(db.Model):
@@ -226,6 +228,7 @@ def other():
     other_products = Product.query.filter_by(type_name = 'other')
     return render_template("pcproducts.html", products=other_products)
 
+# route cart page
 @app.route("/cart/", methods=['GET', 'POST'])
 def cart():
     # Get all cart items for the current user
@@ -253,8 +256,6 @@ def cart():
                 cart_dict[product] = item
     
     return render_template("cart.html", cart=cart_dict, subtotal=subtotal, tax=tax, total=total_price, has_discount=has_discount, discount=discount)
-
-
 
 
 @app.route("/changecart/<int:id>/", methods=['GET', 'POST'])
@@ -288,6 +289,69 @@ def deletecart(id):
         return redirect('/cart/')
     except:
         return 'Something went wrong deleting the product'
+    
+# route checkout page
+@app.route('/checkout/', methods=['GET', 'POST'])
+@login_required
+def checkout():
+    # Get the cart items and calculate order
+    cart_items = Cart.query.filter_by(user_id=current_user.id)
+    product_ids = [item.product_id for item in cart_items]
+    products = Product.query.filter(Product.id.in_(product_ids)).all()
+    subtotal = sum([product.price * item.quantity for product, item in zip(products, cart_items)])
+    tax = round(subtotal * 0.08875, 2)
+
+    # Check if the user has a discount
+    has_discount = False
+    user = User.query.filter_by(id=current_user.id).first()
+    if user.compliments >= 3:
+        has_discount = True
+        discount = round(subtotal * 0.1, 2)
+    else:
+        discount = 0.0
+
+    total_price = round(subtotal + tax - discount, 2)
+
+    # Process the checkout form submission
+    if request.method == 'POST':
+        user = User.query.filter_by(id=current_user.id).first()
+        if user.balance >= total_price:
+            user.balance -= total_price
+            db.session.commit()  
+            
+            # Add the purchase to the Purchased table
+            purchased_items = []
+            for product, item in zip(products, cart_items):
+                purchased_item = Purchased(user_id=current_user.id, cb_id=item.product_id, order_total=total_price ,date_purchased=datetime.date.today())
+                purchased_items.append(purchased_item)
+            
+            db.session.add_all(purchased_items)
+            db.session.commit()
+
+            # remove from cart after purchased
+            cart_items.delete()
+            db.session.commit()
+            
+            return redirect(url_for('checked_out'))
+        else:
+            return "Insufficient balance. Please add funds to your balance."
+
+    cart_dict = {}
+    for item in cart_items:
+        for product in products:
+            if item.product_id == product.id:
+                cart_dict[product] = item
+
+    return render_template('checkout.html', cart=cart_dict, subtotal=subtotal, tax=tax, total=total_price, has_discount=has_discount, discount=discount)
+
+
+@app.route("/checked_out/", methods=['GET', 'POST'])
+@login_required
+def checked_out():
+    return render_template("checked_out.html")
+
+
+
 
 # route logout page
 @app.route('/logout', methods=['GET', 'POST'])
@@ -675,7 +739,8 @@ def user():
                 return "Something went wrong. Try again!"
         else:
             # display page for regular customers
-            return render_template("user.html", user=current_user)
+            purchases = Purchased.query.filter_by(user_id=current_user.id).all()
+            return render_template("user.html", user=current_user, purchases=purchases)
 
     elif current_user.user_type == "EMPLY":
         curr_applications = Application.query.order_by( Application.date_registered)
