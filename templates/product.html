@@ -14,7 +14,11 @@
 {% block content %}
 <div class="product">
     <div class="img">
+        {% if product.image %}
+        <img src="{{ url_for('static', filename='assets/' + product.image) }}">
+        {% else %}
         <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
+        {% endif %}
     </div>
     <div class="detail">
         <h1 class="title">{{ product.name }}</h1>

@@ -24,7 +24,9 @@
         {% if cpu %}
         
         <div class="productInf">
-            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% if cpu.image %}
+            <img src="{{ url_for('static', filename='assets/' + cpu.image) }}">
+            {% endif %}
             <p id="name">{{ cpu.name }}</p>
         </div>
         <p>Price: {{ cpu.price }}</p>
@@ -39,13 +41,15 @@
         {% if cooling %}
         
         <div class="productInf">
-            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% if cooling.image %}
+            <img src="{{ url_for('static', filename='assets/' + cooling.image) }}">
+            {% endif %}
             <p id="name">{{ cooling.name }}</p>
         </div>
         <p>Price: ${{ cooling.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='cooling') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <a href="{{ url_for('deletepart', id=build.id, type='cooler') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
         {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='cooling') }}" style="color:rgb(25, 24, 24)">Add Product</a>
+        <a href="{{ url_for('addpart', id=build.id, type='cooler') }}" style="color:rgb(25, 24, 24)">Add Product</a>
         {% endif %}
     </div>
 
@@ -54,7 +58,9 @@
         {% if motherboard %}
         
         <div class="productInf">
-            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% if motherboard.image %}
+            <img src="{{ url_for('static', filename='assets/' + motherboard.image) }}">
+            {% endif %}
             <p id="name">{{ motherboard.name }}</p>
         </div>
         <p>Price: ${{ motherboard.price }}</p>
@@ -69,29 +75,63 @@
         {% if memory %}
         
         <div class="productInf">
-            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% if memory.image %}
+            <img src="{{ url_for('static', filename='assets/' + memory.image) }}">
+            {% endif %}
             <p id="name">{{ memory.name }}</p>
         </div>
         <p>Price: ${{ memory.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='memory') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <a href="{{ url_for('deletepart', id=build.id, type='RAM') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
         {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='memory') }}" style="color:rgb(25, 24, 24)">Add Product</a>
+        <a href="{{ url_for('addpart', id=build.id, type='RAM') }}" style="color:rgb(25, 24, 24)">Add Product</a>
         {% endif %}
     </div>
 
     <div class="createItems">
         <h1>Storage</h1>
-        {% if storage %}
-        
+        {% if m2 %}
         <div class="productInf">
-            <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
-            <p id="name">{{ storage.name }}</p>
+            {% if m2.image %}
+            <img src="{{ url_for('static', filename='assets/' + m2.image) }}">
+            {% endif %}
+            <p id="name">{{ m2.name }}</p>
         </div>
-        <p>Price: ${{ storage.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='storage') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <p>Price: ${{ m2.price }}</p>
+        <a href="{{ url_for('deletepart', id=build.id, type='m2') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <div class="modify-q">
+            {% if motherboard %}
+            <form method="POST" action="{{ url_for('changequantity', product_id=m2.id, cb_id=build.id, mb_id=motherboard.id) }}">
+                <button name="add1">+</button>
+                <p>{{ build.m2_quantity }}</p>
+                <button name="remove1">-</button>
+            </form>
+            {% endif %}
+        </div>
         {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='storage') }}" style="color:rgb(25, 24, 24)">Add Product</a>
+        <a href="{{ url_for('addpart', id=build.id, type='m2') }}" style="color:rgb(25, 24, 24)">Add M.2 Storage</a>
         {% endif %}
+        {% if ssd_hdd %}
+        <div class="productInf">
+            {% if ssd_hdd.image %}
+            <img src="{{ url_for('static', filename='assets/' + ssd_hdd.image) }}">
+            {% endif %}
+            <p id="name">{{ ssd_hdd.name }}</p>
+        </div>
+        <p>Price: ${{ ssd_hdd.price }}</p>
+        <a href="{{ url_for('deletepart', id=build.id, type='ssd_hdd_drive') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <div class="modify-q">
+            {% if motherboard %}
+            <form method="POST" action="{{ url_for('changequantity', product_id=ssd_hdd.id, cb_id=build.id, mb_id=motherboard.id) }}">
+                <button name="add1">+</button>
+                <p>{{ build.ssd_hdd_drive_quantity }}</p>
+                <button name="remove1">-</button>
+            </form>
+            {% endif %}
+        </div>
+        {% else %}
+        <a href="{{ url_for('addpart', id=build.id, type='ssd_hdd_drive') }}" style="color:rgb(25, 24, 24)">Add SSD/HDD Storage</a>
+        {% endif %}
+
     </div>
     
     <div class="createItems">
@@ -103,9 +143,9 @@
             <p id="name">{{ gpu.name }}</p>
         </div>
         <p>Price: ${{ gpu.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='gpu') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <a href="{{ url_for('deletepart', id=build.id, type='GPU') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
         {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='gpu') }}" style="color:rgb(25, 24, 24)">Add Product</a>
+        <a href="{{ url_for('addpart', id=build.id, type='GPU') }}" style="color:rgb(25, 24, 24)">Add Product</a>
         {% endif %}
     </div>
 
@@ -114,13 +154,15 @@
         {% if psu %}
         
         <div class="productInf">
+            {% if psu.image %}
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% endif %}
             <p id="name">{{ psu.name }}</p>
         </div>
         <p>Price: ${{ psu.price }}</p>
-        <a href="{{ url_for('deletepart', id=build.id, type='psu') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <a href="{{ url_for('deletepart', id=build.id, type='PSU') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
         {% else %}
-        <a href="{{ url_for('addpart', id=build.id, type='psu') }}" style="color:rgb(25, 24, 24)">Add Product</a>
+        <a href="{{ url_for('addpart', id=build.id, type='PSU') }}" style="color:rgb(25, 24, 24)">Add Product</a>
         {% endif %}
     </div>
     
@@ -129,7 +171,9 @@
         {% if case %}
         
         <div class="productInf">
+            {% if case.image %}
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% endif %}
             <p id="name">{{ case.name }}</p>
         </div>
         <p>Price: ${{ case.price }}</p>
@@ -147,10 +191,12 @@
         <h1>Compatibility:</h1>
         {% if compatibility=='Okay' %}
         <div class="compItem1"> <p>Good: no issues found</p></div>
-        {% elif compatibility=='BIOS' %}
+        {% elif compatibility=='Bios' %}
         <div class="compItem2"> <p>Warning: may require bios update</p></div>
         {% elif compatibility=='Error' %}
         <div class="compItem3"> <p>Issue: issue detected. One or more items may be out of stock or are not compatible</p></div>
+        {% elif compatibility=='Power' %}
+        <div class="compItem3"> <p>Issue: issue detected. Power out of PSU capacities</p></div>
         {% else %}
         {% endif %}
     </div>

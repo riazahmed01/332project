@@ -17,7 +17,11 @@
     <div class="main-container">
         {% for product in products %}
         <div class="product">
+            {% if product.image %}
+            <img src="{{ url_for('static', filename='assets/' + product.image) }}">
+            {% else %}
             <img src="{{ url_for('static', filename='assets/prod.jpg') }}">
+            {% endif %}
             <div class="product_desc">
                 <h3><a href="{{ url_for('product', id=product.id) }}">{{ product.name }}</a></h3>
                 <h4>{{ product.description }}</h4>

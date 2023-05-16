@@ -5,6 +5,8 @@ import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import re
 
+from sqlalchemy import or_
+
 # create flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "secret key"
@@ -78,14 +80,14 @@ class Banned(db.Model):
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     model = db.Column(db.String(100), nullable=False)
-    name = db.Column(db.String(250), unique=True, nullable=False)#
-    description = db.Column(db.Text, nullable=False)
+    type_name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(250), unique=True, nullable=False)
+    image = db.Column(db.String(250))
     price = db.Column(db.Float, nullable =False)
     power = db.Column(db.Integer)
-    discounts = db.Column(db.Float, nullable=False, default=0.0)#
-    type_name = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.Integer, default=0)
-    in_stock = db.Column(db.Boolean, default = True)#delete plz
+    description = db.Column(db.Text, nullable=False)
+    discounts = db.Column(db.Float, default=0.0)
+    in_stock = db.Column(db.Boolean, default = True)
     form_factor = db.Column(db.String(50))
     date_registered = db.Column(db.Date, default=datetime.date.today())
     comments = db.relationship('Comments', backref='product', lazy=True)
@@ -126,14 +128,13 @@ class Taboo(db.Model):
 class Specs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-    cpu_support = db.Column(db.String(200))
-    bios_update = db.Column(db.String(200))
-    m2_support = db.Column(db.String(200))
-    ssd_hard_drive_support = db.Column(db.String(200))
-    pclex16_slots = db.Column(db.String(200))
-    memory_type = db.Column(db.String(200))
-    memory_slots = db.Column(db.String(200))
-    fan_size = db.Column(db.String(200))
+    cpu_support = db.Column(db.Text)
+    bios_update = db.Column(db.Text)
+    m2_support = db.Column(db.Integer)
+    ssd_hard_drive_support = db.Column(db.Integer)
+    pclex16_slots = db.Column(db.Integer)
+    memory_type = db.Column(db.String(20))
+    memory_slots = db.Column(db.Integer)
 
 
 class CustomBuild(db.Model):
@@ -142,15 +143,18 @@ class CustomBuild(db.Model):
     name = db.Column(db.String(100), nullable=False)
     build_type = db.Column(db.String(50))
     cpu_id = db.Column(db.Integer)
-    cooling_id = db.Column(db.Integer)
+    cooler_id = db.Column(db.Integer)
     motherboard_id = db.Column(db.Integer)
-    memory_id = db.Column(db.Integer)
-    storage_id = db.Column(db.Integer)
-    gpu_id = db.Column(db.Integer)
-    psu_id = db.Column(db.Integer)
-    other_id = db.Column(db.Integer)
+    RAM_id = db.Column(db.Integer)
+    m2_id = db.Column(db.Integer)
+    GPU_id = db.Column(db.Integer)
+    PSU_id = db.Column(db.Integer)
+    case_id = db.Column(db.Integer)
     price = db.Column(db.Float, default = 0)
     power_supply = db.Column(db.Integer)
+    ssd_hdd_drive_id = db.Column(db.Integer)
+    m2_quantity = db.Column(db.Integer)
+    ssd_hdd_drive_quantity = db.Column(db.Integer)
 
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -177,13 +181,13 @@ def cpu():
 # route cooling page
 @app.route("/cooling/")
 def cooling():
-    cooling_products = Product.query.filter_by(type_name='cooling')
+    cooling_products = Product.query.filter_by(type_name='cooler')
     return render_template("pcproducts.html", products=cooling_products)
 
 # route gpu page
 @app.route("/gpu/")
 def gpu():
-    gpu_products = Product.query.filter_by(type_name='gpu')
+    gpu_products = Product.query.filter_by(type_name='GPU')
     return render_template("pcproducts.html", products=gpu_products)
 
 
@@ -197,19 +201,19 @@ def motherboard():
 # route memory page
 @app.route("/memory/")
 def memory():
-    memory_products = Product.query.filter_by(type_name='memory')
+    memory_products = Product.query.filter_by(type_name='RAM')
     return render_template("pcproducts.html", products=memory_products)
 
 # route storage page
 @app.route("/storage/")
 def storage():
-    storage_products = Product.query.filter_by(type_name='storage')
+    storage_products = Product.query.filter(or_(Product.type_name == 'm2', Product.type_name == 'ssd_hard_drive')).all()
     return render_template("pcproducts.html", products=storage_products)
   
 # route psu page
 @app.route("/psu/")
 def psu():
-    psu_products = Product.query.filter_by(type_name='psu')
+    psu_products = Product.query.filter_by(type_name='PSU')
     return render_template("pcproducts.html", products=psu_products)
 
 # route case page
@@ -673,11 +677,10 @@ def manage_product():
         new_descrp = request.form['description']
         new_price = request.form['price']
         new_type_prod = request.form['type-name']
-        new_quantity = request.form['quantity']
         existing_product = Product.query.filter_by(name=new_name).first()
         new_prod = Product(name=new_name, model=new_model, power=power,form_factor=formfactor, description=new_descrp,
                            price=new_price, type_name=new_type_prod,
-                           discounts=0, quantity=new_quantity)
+                           discounts=0)
         cpu_support = request.form['cpu-support']
         bios_update = request.form['bios-update']
         m2_support = request.form['m2_support']
@@ -857,8 +860,8 @@ def deletepart(id,type):
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
-        elif type=='cooling':
-            cb.cooling_id = None
+        elif type=='cooler':
+            cb.cooler_id = None
             try:
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
@@ -869,107 +872,211 @@ def deletepart(id,type):
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
-        elif type=='memory':
-            cb.memory_id = None
+        elif type=='RAM':
+            cb.RAM_id = None
             try:
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
-        elif type=='storage':
-            cb.storage_id = None
+        elif type=='m2':
+            cb.m2_id = None
+            cb.m2_quantity = 0
             try:
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
-        elif type=='gpu':
-            cb.gpu_id = None
+        elif type=='ssd_hdd_drive':
+            cb.ssd_hdd_drive_id = None
+            cb.ssd_hdd_drive_quantity = 0
             try:
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
-        elif type=='psu':
-            cb.psu_id = None
+        elif type=='GPU':
+            cb.GPU_id = None
+            try:
+                db.session.commit()
+                return redirect(url_for('createbuild', id=id))
+            except: return'Something went wrong'
+        elif type=='PSU':
+            cb.PSU_id = None
             try:
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
         elif type=='case':
-            cb.other_id = None
+            cb.case_id = None
             try:
                 db.session.commit()
                 return redirect(url_for('createbuild', id=id))
             except: return'Something went wrong'
-@app.route('/addpart/<int:id>/<string:type>', methods=['POST','GET'])
-def addpart(id,type):
+@app.route('/addpart/<int:id>/<string:type>', methods=['POST', 'GET'])
+def addpart(id, type):
     cb = CustomBuild.query.get(id)
-    products = Product.query.filter_by(type_name=type)
-    if request.method=='POST':
-        product_id = request.form['product_id']
-        product = Product.query.filter_by(id=product_id).first()
-        type = product.type_name
-        if type=='cpu':
-            cb.cpu_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        elif type=='cooling':
-            cb.cooling_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        if type=='motherboard':
-            cb.motherboard_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        if type=='memory':
-            cb.memory_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        if type=='storage':
-            cb.storage_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        if type=='gpu':
-            cb.gpu_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        if type=='psu':
-            cb.psu_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
-        if type=='case':
-            cb.other_id = product_id
-            try:
-                db.session.commit()
-                return redirect(url_for('createbuild', id=id))
-            except: return'Something went wrong'
 
-    return render_template('pickproduct.html', products=products)
-@app.route('/addcart/<int:cb_id>', methods=['POST','GET'])
-def addcart(cb_id):
+    # Retrieve the already selected parts for the build
+    selected_parts = {
+        'cpu': cb.cpu_id,
+        'cooler': cb.cooler_id,
+        'motherboard': cb.motherboard_id,
+        'RAM': cb.RAM_id,
+        'm2': cb.m2_id,
+        'ssd_hdd_drive': cb.ssd_hdd_drive_id,
+        'GPU': cb.GPU_id,
+        'PSU': cb.PSU_id,
+        'case': cb.case_id
+    }
+
+    # Filter products based on the selected parts and compatibility
+    products = Product.query.filter_by(type_name=type).all()
+    compatible_products = []
+    if type=='cpu':
+        for product in products:
+            if check_cpu_compatibility(product, selected_parts['motherboard']) == 'Okay':
+                compatible_products.append(product)
+
+    if type=='motherboard':
+        if not selected_parts['cpu'] and not selected_parts['RAM'] and not selected_parts['case']:
+            compatible_products = products
+        else:
+            cpu_compatible = []
+            memory_compatible =[]
+            case_compatible=[]
+            for product in products:
+                if cb.cpu_id:
+                    if 'Okay' == check_motherboard_cpu(product, selected_parts['cpu']):
+                        cpu_compatible.append(product)
+                if selected_parts['RAM']:
+                    if 'Okay' == check_motherboard_memory(product, selected_parts['RAM']):
+                        memory_compatible.append(product)
+                if selected_parts['case']:
+                    if 'Okay' == check_motherboard_case(product, selected_parts['case']):
+                        case_compatible.append(product)
+            temp = cpu_compatible+memory_compatible+case_compatible
+            compatible_products = set(temp)
+    if type=='RAM':
+        for product in products:
+            if check_memory_compatibility(product, selected_parts['motherboard']) == 'Okay':
+                compatible_products.append(product)
+    if type=='GPU':
+        for product in products:
+            if check_gpu_compatibility(product, selected_parts['case']) == 'Okay':
+                compatible_products.append(product)
+    if type == 'cooler':
+        for product in products:
+            if check_cooler_compatibility(product, selected_parts['case']) == 'Okay':
+                compatible_products.append(product)
+    if type=='PSU':
+        for product in products:
+            if check_psu_compatibility(product, selected_parts['case']) == 'Okay':
+                compatible_products.append(product)
+    if type=='case':
+        if not selected_parts['cooler'] and not selected_parts['GPU'] and not selected_parts['motherboard']:
+            compatible_products = products
+        else:
+            cooler_compatible = []
+            gpu_compatible =[]
+            motherboard_compatible=[]
+            
+            for product in products:
+                if selected_parts['motherboard']:
+                    if 'Okay' == check_case_motherboard(product, selected_parts['motherboard']):
+                        motherboard_compatible.append(product)
+                if selected_parts['GPU']:
+                    if 'Okay' == check_case_gpu(product, selected_parts['GPU']):
+                        gpu_compatible.append(product)
+                if selected_parts['cooler']:
+                    if 'Okay' == check_case_cooler(product, selected_parts['cooler']):
+                        cooler_compatible.append(product)
+            temp = cooler_compatible + gpu_compatible + motherboard_compatible
+            compatible_products = set(temp)
+    elif type == 'm2' or type == 'ssd_hdd_drive':
+        compatible_products = products
+
+    if request.method == 'POST':
+        product_id = request.form['product_id']
+        product = Product.query.get(product_id)
+        if product:
+            type = product.type_name
+            if type == 'm2':
+                if type in selected_parts:
+                    setattr(cb, type + '_id', product_id)
+                    setattr(cb, type + '_quantity', 1)
+                    try:
+                        db.session.commit()
+                        return redirect(url_for('createbuild', id=id))
+                    except:
+                        return 'Something went wrong'
+            elif type == 'ssd_hdd_drive':
+                if type in selected_parts:
+                    setattr(cb, type + '_id', product_id)
+                    setattr(cb, type + '_quantity', 1)
+                    try:
+                        db.session.commit()
+                        return redirect(url_for('createbuild', id=id))
+                    except:
+                        return 'Something went wrong'
+            else:
+                if type in selected_parts:
+                    # Update the selected part in the custom build
+                    setattr(cb, type + '_id', product_id)
+                    try:
+                        db.session.commit()
+                        return redirect(url_for('createbuild', id=id))
+                    except:
+                        return 'Something went wrong'
+
+    return render_template('pickproduct.html', products=compatible_products)
+
+@app.route('/changequantity/<int:product_id>/<int:cb_id>/<int:mb_id>', methods=['POST', 'GET'])
+def changequantity(product_id, cb_id, mb_id):
+    if request.method == 'POST':
+        cb = CustomBuild.query.get(cb_id)
+        Storage = Product.query.get(product_id)
+        mb_specs = Specs.query.filter_by(product_id=mb_id).first()
+        if mb_specs.m2_support:
+            if 'add1' in request.form:
+                if Storage.type_name == 'm2' and cb.m2_quantity < mb_specs.m2_support:
+                    cb.m2_quantity += 1
+                elif Storage.type_name == 'ssd_hdd_drive' and mb_specs and cb.ssd_hdd_drive_quantity < mb_specs.ssd_hard_drive_support:
+                    cb.ssd_hdd_drive_quantity += 1
+            elif 'remove1' in request.form:
+                if Storage.type_name == 'm2':
+                    if cb.m2_quantity > 0:
+                        cb.m2_quantity -= 1
+                        if cb.m2_quantity == 0:
+                            # Delete the product if the quantity reaches 0
+                            cb.m2_id = None
+                elif Storage.type_name == 'ssd_hdd_drive':
+                    if cb.ssd_hdd_drive_quantity > 0:
+                        cb.ssd_hdd_drive_quantity -= 1
+                        if cb.ssd_hdd_drive_quantity == 0:
+                            # Delete the product if the quantity reaches 0
+                            cb.ssd_hdd_drive_id = None
+
+            try:
+                db.session.commit()
+                return redirect(url_for('createbuild', id=cb_id))
+            except Exception as e:
+                print(str(e))
+                return 'Something went wrong modifying the cart'
+        else: return 'No specs'
+
+    return redirect(url_for('createbuild', id=cb_id))
+@app.route('/addcart/<int:cb_id>/<int:post>/', methods=['POST','GET'])
+def addcart(cb_id,post):
     cb = CustomBuild.query.get(cb_id)
      # create a new Cart object for each product in the custom build
     cart_items = [
         Cart(product_id=cb.cpu_id, user_id=current_user.id),
-        Cart(product_id=cb.cooling_id, user_id=current_user.id),
+        Cart(product_id=cb.cooler_id, user_id=current_user.id),
         Cart(product_id=cb.motherboard_id, user_id=current_user.id),
-        Cart(product_id=cb.memory_id, user_id=current_user.id),
-        Cart(product_id=cb.storage_id, user_id=current_user.id),
-        Cart(product_id=cb.gpu_id, user_id=current_user.id),
-        Cart(product_id=cb.psu_id, user_id=current_user.id),
-        Cart(product_id=cb.other_id, user_id=current_user.id)
+        Cart(product_id=cb.RAM_id, user_id=current_user.id),
+        Cart(product_id=cb.m2_id, user_id=current_user.id),
+        Cart(product_id=cb.ssd_hdd_drive_id, user_id=current_user.id),
+        Cart(product_id=cb.GPU_id, user_id=current_user.id),
+        Cart(product_id=cb.PSU_id, user_id=current_user.id),
+        Cart(product_id=cb.case_id, user_id=current_user.id)
     ]
 
     # add each cart item to the database session
@@ -980,6 +1087,12 @@ def addcart(cb_id):
         db.session.commit()
     except:
         return "Something went wrong adding the build"
+    if post!=1:
+        try:
+            db.session.delete(cb)
+            db.session.commit()
+        except:
+            return "Something went wrong deleting the build"
     return redirect('/cart')
 
 @app.route("/createbuild/<int:id>", methods=['POST','GET'])
@@ -988,72 +1101,69 @@ def createbuild(id):
         if request.method=='POST':
             post = request.form['option']
             if 'yes' == post:
-                return redirect(url_for('addcart', cb_id=id))
+                return redirect(url_for('addcart', cb_id=id, post=1))
             elif 'no' == post:
-                #add it to the shopping cart and delete the custom build
-                return 'something'
+                return redirect(url_for('addcart', cb_id=id, post=0))
 
         cb = CustomBuild.query.get(id)
         cpu = Product.query.get(cb.cpu_id)
-        cooling = Product.query.get(cb.cooling_id)
+        cooling = Product.query.get(cb.cooler_id)
         mb=Product.query.get(cb.motherboard_id)
-        memory = Product.query.get(cb.memory_id)
-        storage = Product.query.get(cb.storage_id)
-        gpu=Product.query.get(cb.gpu_id)
-        psu = Product.query.get(cb.psu_id)
-        case= Product.query.get(cb.other_id)
-        lst_prod = [cpu,cooling,mb,memory,storage,gpu,psu,case]
-        price = get_price(lst_prod)
-        power = get_power(lst_prod,psu)
+        memory = Product.query.get(cb.RAM_id)
+        m2 = Product.query.get(cb.m2_id)
+        ssd_hdd = Product.query.get(cb.ssd_hdd_drive_id)
+        gpu=Product.query.get(cb.GPU_id)
+        psu = Product.query.get(cb.PSU_id)
+        case= Product.query.get(cb.case_id)
+        
+        lst_prod = [cpu,cooling,mb,memory,m2,ssd_hdd,gpu,psu,case]
+        price = get_price(lst_prod, cb.m2_quantity, cb.ssd_hdd_drive_quantity)
+        power = get_power(lst_prod, psu,cb.m2_quantity, cb.ssd_hdd_drive_quantity)
         compatibility='Not Done'
-        if cpu and cooling and mb and memory and storage and gpu and psu and case:
-            compatibility = check_comp(cpu,cooling,mb,memory,storage,gpu,psu,case, power)
+        if cpu and cooling and mb and memory and m2 and ssd_hdd and gpu and psu and case:
+            mb_specs = Specs.query.filter_by(product_id=mb.id).first()
+            compatibility = check_comp(lst_prod, mb_specs,power)
         return render_template("createbuild.html", build=cb, cpu=cpu,cooling=cooling,
-                               motherboard=mb,memory=memory,storage=storage,gpu = gpu, psu=psu,
+                               motherboard=mb,memory=memory,m2=m2,ssd_hdd=ssd_hdd,gpu = gpu, psu=psu,
                                case=case, power=power, price = price, compatibility=compatibility)
     return redirect('/login')
 
-def check_comp(cpu,cooling,mb,memory,storage,gpu,psu,case, power):
-    mb_specs = Specs.query.filter_by(product_id=mb.id).first()
-    memory_specs = Specs.query.filter_by(product_id=memory.id).first()
-    storage_specs = Specs.query.filter_by(product_id=storage.id).first()
-    cooling_specs = Specs.query.filter_by(product_id=cooling.id).first()
-    case_specs = Specs.query.filter_by(product_id=case.id).first()
-    if mb_specs.memory_type!=memory_specs.memory_type:
-        return 'Error'
-    elif mb_specs.memory_slots<memory_specs.memory_slots:
-        return 'Error'
-    elif storage_specs.m2_support > mb_specs.m2_support:
-        return 'Error'
-    elif storage_specs.ssd_hard_drive_support:
-        if storage_specs.ssd_hard_drive_support > mb_specs.ssd_hard_drive_support:
+def check_comp(lst_prod, mb_specs, power):
+    if mb_specs is None:
+        return 'Error'  # or any appropriate response if the motherboard specifications are missing
+
+    for product in lst_prod:
+        if product.in_stock != 1:
             return 'Error'
-    elif cpu.model not in mb_specs.cpu_support:
-        return "Error"
-    elif mb_specs.bios_update:
-        if cpu.model in mb_specs.bios_update:
-            return "BIOS"
-    elif case.form_factor not in mb.form_factor and case.form_factor not in psu.form_factor:
-        return "Error"
-    elif cooling_specs.fan_size[:-2] > case_specs.fan_size[:-2]:
-        return "Error"
-    elif cpu.model not in cooling_specs.cpu_support:
-        return "Error"
-    elif power>psu.power:
-        return "Error"
-    else:
-        return 'Okay'
-def get_power(products,psu):
+        if product.type_name == 'PSU':
+            if product.power < power:
+                return 'Power'
+        if product.type_name == 'cpu':
+            if mb_specs.bios_update is not None and product.model in mb_specs.bios_update:
+                return 'Bios'
+    return 'Okay'
+
+def get_power(products, psu, m2_q, ssd_hdd_q):
     power = 0
     for product in products:
-        if product and product!=psu:
-            power += product.power
+        if product and product != psu and product.power:
+            if product.type_name == 'm2':
+                power += (product.power * m2_q)
+            elif product.type_name == 'ssd_hdd_drive':
+                power += (product.power * ssd_hdd_q)
+            else:
+                power += product.power
     return power
-def get_price(products):
+def get_price(products, m2_q, ssd_hdd_q):
     price = 0.0
     for product in products:
-        if product:
-            price += product.price
+        if product and product.price:
+            if product.type_name=='m2':
+                price += (product.price * m2_q)
+            elif product.type_name=='ssd_hdd_drive':
+                price += (product.price * ssd_hdd_q)
+            else:
+                price += product.price
     return price
 # route recommended custombuilds page
 @app.route("/recbuild/")
@@ -1065,6 +1175,148 @@ def recbuild():
 def userbuild():
     return render_template("userbuild.html")
 
+
+def check_cpu_compatibility(cpu, motherboard):
+    if motherboard:
+        motherboard_specs = Specs.query.filter_by(product_id=motherboard).first()
+
+        if cpu.model in motherboard_specs.cpu_support:
+            return 'Okay'
+        elif motherboard_specs.bios_update: 
+            if cpu.model in motherboard_specs.bios_update:
+                return 'Okay'
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+
+def check_motherboard_cpu(motherboard, cpu):
+    if cpu:
+        CPU = Product.query.get(cpu)
+        motherboard_specs = Specs.query.filter_by(product_id=motherboard.id).first()
+        if CPU.model in motherboard_specs.cpu_support:
+            return "Okay"
+        elif motherboard_specs.bios_update:
+            if CPU.model in motherboard_specs.bios_update:
+                return 'Okay'
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+
+def check_motherboard_memory(motherboard, memory):
+    if memory:
+        motherboard_specs = Specs.query.filter_by(product_id=motherboard).first()
+        memory_specs = Specs.query.filter_by(product_id=memory).first()
+        if motherboard_specs.memory_type == memory_specs.memory_type and motherboard_specs.memory_slots >= memory_specs.memory_slots:
+            return "Okay"
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+    
+def check_motherboard_case(motherboard, case):
+    if case:
+        Case = Product.query.get(case)
+        if check_formfactor(motherboard,Case):
+            return "Okay"
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+    
+def check_memory_compatibility(memory, motherboard):
+    if motherboard:
+        motherboard_specs = Specs.query.filter_by(product_id=motherboard).first()
+        memory_specs = Specs.query.filter_by(product_id=memory.id).first()
+        if (memory_specs.memory_slots <= motherboard_specs.memory_slots
+            and memory_specs.memory_type == motherboard_specs.memory_type):
+            return 'Okay'
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+
+
+def check_storage_compatibility(storage, motherboard):
+    if motherboard:
+        motherboard_specs = Specs.query.filter_by(product_id=motherboard).first()
+        storage_specs = Specs.query.filter_by(product_id=storage.id).first()
+        if storage_specs.m2_support <= motherboard_specs.m2_support and storage_specs.ssd_hard_drive_support <= motherboard_specs.ssd_hard_drive_support:
+            return 'Okay'
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+
+
+def check_gpu_compatibility(gpu, case):
+    if case:
+        case_prod = Product.query.filter_by(id=case).first()
+        if check_formfactor(gpu,case_prod):
+            return 'Okay'
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+
+def check_cooler_compatibility(cooler, case):
+    if case:
+        case_prod = Product.query.filter_by(id=case).first()
+        if check_formfactor(cooler,case_prod):
+            return 'Okay'
+        else:
+            return 'Error'
+    else:
+        return 'Okay'
+
+
+def check_psu_compatibility(psu, case):
+    if case:
+        case_prod = Product.query.filter_by(id=case).first()
+
+        if check_formfactor(psu,case_prod):
+            return 'Okay'
+        else:
+            return 'Error'
+    else: return 'Okay'
+
+def check_formfactor(prod1, prod2):
+    if prod2.form_factor=='mini-ITX':
+        return True
+    elif prod2.form_factor=='micro-ATX':
+        return prod1.form_factor=='ATX' or prod1.form_factor=='micro-ATX' or prod1.form_factor=='E-ATX'
+    elif prod2.form_factor=='ATX':
+        return prod1.form_factor=='E-ATX' or prod1.form_factor=='micro-ATX'
+    elif prod2.form_factor=='E-ATX':
+        return prod1.form_factor=='E-ATX'
+    
+def check_case_motherboard(case, motherboard):
+    if motherboard:
+        mb = Product.query.get(motherboard)
+        if check_formfactor(case,mb):
+            return 'Okay'
+        else: return 'Error'
+    else:
+        return 'Okay'
+
+def check_case_gpu(case,gpu):
+    if gpu:
+        gpu = Product.query.get(gpu)
+        if check_formfactor(case,gpu):
+            return 'Okay'
+        else: return 'Error'
+    else:
+        return 'Okay'
+
+def check_case_cooler(case, cooler):
+    if cooler:
+        Cooler = Product.query.get(cooler)
+        if check_formfactor(case,Cooler):
+            return 'Okay'
+        else: return 'Error'
+    else:
+        return 'Okay'    
 
 ### Run application ###
 if __name__ == "__main__":
