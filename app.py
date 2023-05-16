@@ -161,22 +161,6 @@ class Rating(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     cb_id = db.Column(db.Integer, db.ForeignKey('custom_build.id'), nullable=False)
     
-class CustomBuild(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    build_type = db.Column(db.String(50))
-    cpu_id = db.Column(db.Integer)
-    cooling_id = db.Column(db.Integer)
-    motherboard_id = db.Column(db.Integer)
-    memory_id = db.Column(db.Integer)
-    storage_id = db.Column(db.Integer)
-    gpu_id = db.Column(db.Integer)
-    psu_id = db.Column(db.Integer)
-    other_id = db.Column(db.Integer)
-    price = db.Column(db.Float, default = 0)
-    power_supply = db.Column(db.Integer)
-    #rating = db.relationship('Rating', backref='custombuild', lazy=True)
 
 # route home/index page
 @app.route("/")
