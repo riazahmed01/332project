@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+<!--links-->
+{% block links %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/checkout.css') }}">
+{% endblock links %}
+
+<!--title of the page-->
+{% block titlePage %}
+    
+{% endblock titlePage %}
+
+<!--main content of the page-->
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+</head>
+<body>
+  <h1>Checkout</h1>
+  
+  <div class="checkout-summary">
+    <h2>Order Summary</h2>
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+      {% for product, item in cart.items() %}
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ product.price * item.quantity }}</td>
+      </tr>
+      {% endfor %}
+      
+      {% if has_discount %}
+      <tr>
+        <td colspan="2">Discount: You qualify for a 10% discount!</td>
+        <td><span class="discount">-${{ discount }}</span></td>
+      </tr>
+      {% endif %}
+    
+      <tr>
+        <td colspan="2">Tax:</td>
+        <td>${{ tax }}</td>
+      </tr>
+ 
+      <tr>
+        <td colspan="2">Total:</td>
+        <td>${{ total }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="checkout-form">
+    <h2>Payment Information</h2>
+    <p>Current Balance: ${{ current_user.balance }}</p>
+    <form method="post" action="{{ url_for('checkout') }}">
+      <label for="payment-type">Payment Type:</label>
+      <input type="text" id="payment-type" name="payment_type" value="User Balance" disabled>
+      
+      <button type="submit">Place Order</button>
+    </form>
+    <a class="cart-button" href="{{ url_for('cart') }}">Go back to cart</a>
+  </div>
+</body>
+</html>
+{% endblock %}

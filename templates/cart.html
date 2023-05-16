@@ -2,17 +2,88 @@
 
 <!--links-->
 {% block links %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
 {% endblock links %}
 
 <!--title of the page-->
 {% block titlePage %}
-    Home Page
+Cart
 {% endblock titlePage %}
 
 <!--main content of the page-->
 {% block content %}
 
-    <h1>user cart goes heree</h1>
+  <h1>Cart</h1>
+  {% if cart %}
+    <div class="cart-container">
+      <table>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th>Actions</th>
+        </tr>
+        {% for product, item in cart.items() %}
+          {% for i in range(item.quantity) %}
+            <tr>
+              {% if loop.index == 1 %}
+                <td rowspan="{{ item.quantity }}">{{ product.name }}</td>
+                <td rowspan="{{ item.quantity }}">
+                  <form method="POST" action="/changecart/{{ product.id }}/">
+                    <input type="hidden" name="_method" value="POST">
+                    <input type="hidden" name="change-q" value="remove1">
+                    <button>-</button>
+                  </form>
+                  {{ item.quantity }}
+                  <form method="POST" action="/changecart/{{ product.id }}/">
+                    <input type="hidden" name="_method" value="POST">
+                    <input type="hidden" name="change-q" value="add1">
+                    <button>+</button>
+                  </form>
+                </td>
+                <td rowspan="{{ item.quantity }}">{{ product.price }}</td>
+                <td rowspan="{{ item.quantity }}">{{ item.quantity * product.price }}</td>
+                <td rowspan="{{ item.quantity }}">
+                  <form method="POST" action="/deletecart/{{ item.id }}/" onsubmit="return confirm('Are you sure you want to remove this item from your cart?');">
+                    <input type="hidden" name="_method" value="POST">
+                    <button>Delete</button>
+                  </form>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        {% endfor %}
+        {% if current_user.compliments >= 3 %}
+          <tr>
+            <td colspan="5" class="discount">You qualify for a 10% discount!</td>
+          </tr>
+        {% endif %}
+        {% if has_discount %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td><strong>Discount:</strong></td>
+            <td>${{ discount }}</td>
+            <td></td>
+          </tr>
+        {% endif %}
+        <tr>  
+          <td></td>
+          <td></td>
+          <td><strong>Tax:</strong></td>
+          <td>${{ tax }}</td>
+          <td><strong>Total:</strong></td>
+          <td><strong>${{ total }}</strong></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+    <a href="{{ url_for('checkout') }}" class="checkout-button">Checkout</a>
+    <p><a style="color:black;" href="/">Continue Shopping</a></p>
     
-{% endblock %}
+  {% else %}
+    <p>Your cart is empty.</p>
+    <p><a href="/">Start Shopping</a></p>
+  {% endif %}
+{% endblock content %}
