@@ -29,3 +29,16 @@ This is a Flask based web-application that features a store and pc building with
     - The customer can communicate with store employees about any concerns over the purchase, and afterward, the customer can complain or compliment the employee to the store owner with justifications. The store employee can complain, or compliment the customer as well, the store owner will process the compliment/complaint by issuing a possibly different number of “compliments” or “warning” to the employee or customer, e.g., a very bad behavior may receive 3 warnings to severely punish the party.
     - Any computer configuration receiving the worst ratings will be removed and the one who set it up (employee or customer) received one warning. Conversely, anyone receiving the best ratings will be put on the top page of the store and the one who set it up received a compliment.
     - Any comments or communications of the system among visitors, customers, and employees should go thru a language checking. Visitor's comments with these words will be deleted immediately and not be shown at all, whereas others will receive a warning. if more than 3 taboo words present in one message, 2 warnings will be issued and the message is not shown.
+
+## Screenshots:
+
+![image](https://github.com/riazahmed01/322project/assets/50673480/0eb00bb9-b2ae-48cc-abbd-bc789942b766)
+![image-1](https://github.com/riazahmed01/322project/assets/50673480/d3b9c9cc-5f29-48b2-8331-84974fa9a0f5)
+![image](https://github.com/riazahmed01/322project/assets/50673480/94b8b449-17b6-4c55-8796-84d9e95fab8a)
+![image-1](https://github.com/riazahmed01/322project/assets/50673480/05c2596c-1cc6-44bb-9c99-9ddc1bcbc54f)
+![image-2](https://github.com/riazahmed01/322project/assets/50673480/b5bc85b5-4ab5-4b29-91ef-785cde9f92e5)
+![image](https://github.com/riazahmed01/322project/assets/50673480/e195b8e5-18d8-4558-bde9-7701fc1e9bbe)
+![image](https://github.com/riazahmed01/322project/assets/50673480/e9e81bed-1e3e-4261-982e-9b8de93bd725)
+![image-1](https://github.com/riazahmed01/322project/assets/50673480/73641bb3-8002-4cd4-885f-d74fb1b16e49)
+![image-2](https://github.com/riazahmed01/322project/assets/50673480/4113a1d3-f7eb-4396-82e0-8f6754b14bb3)
+![image-3](https://github.com/riazahmed01/322project/assets/50673480/c1a74855-ee22-4a99-898b-ced13a5d3598)
