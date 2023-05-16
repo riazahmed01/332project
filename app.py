@@ -125,8 +125,8 @@ class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    cb_id = db.Column(db.Integer, db.ForeignKey('custombuild.id'), nullable=False)
-
+    cb_id = db.Column(db.Integer, db.ForeignKey('custom_build.id'), nullable=False)
+    
 class CustomBuild(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -142,6 +142,7 @@ class CustomBuild(db.Model):
     other_id = db.Column(db.Integer)
     price = db.Column(db.Float, default = 0)
     power_supply = db.Column(db.Integer)
+    #rating = db.relationship('Rating', backref='custombuild', lazy=True)
 
 # route home/index page
 @app.route("/")
@@ -432,13 +433,20 @@ def product(id):
 @app.route("/rating/<int:user_id>/<int:cb_id>", methods=["POST","GET"])
 def rating(user_id, cb_id):
     rate = Rating.query.filter_by(user_id=user_id, cb_id=cb_id).first()
+    #Rating.user_id == user_id, 
+    count_1 = Rating.query.filter(Rating.cb_id == cb_id, Rating.rating == 1).count()
+    count_2 = Rating.query.filter(Rating.cb_id == cb_id, Rating.rating == 2).count()
+    count_3 = Rating.query.filter(Rating.cb_id == cb_id, Rating.rating == 3).count()
+    count_4 = Rating.query.filter(Rating.cb_id == cb_id, Rating.rating == 4).count()
+    count_5 = Rating.query.filter(Rating.cb_id == cb_id, Rating.rating == 5).count()
     if request.method=='POST': 
         if "rate-1" in request.form:
             if rate:
                 rate.rating = 1
                 try:
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except:
                     return "Error rating"
             else:
@@ -446,7 +454,8 @@ def rating(user_id, cb_id):
                 try: 
                     db.session.add(rating)
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except: 
                     return 'Something went wrong'
         elif "rate-2" in request.form:
@@ -454,7 +463,8 @@ def rating(user_id, cb_id):
                 rate.rating = 2
                 try:
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except:
                     return "Error rating"
             else:
@@ -462,7 +472,8 @@ def rating(user_id, cb_id):
                 try: 
                     db.session.add(rating)
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except: 
                     return 'Something went wrong'
         elif "rate-3" in request.form:
@@ -470,7 +481,8 @@ def rating(user_id, cb_id):
                 rate.rating = 3
                 try:
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except:
                     return "Error rating"
             else:
@@ -478,7 +490,8 @@ def rating(user_id, cb_id):
                 try: 
                     db.session.add(rating)
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except: 
                     return 'Something went wrong'
         elif "rate-4" in request.form:
@@ -486,7 +499,8 @@ def rating(user_id, cb_id):
                 rate.rating = 4
                 try:
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except:
                     return "Error rating"
             else:
@@ -494,7 +508,8 @@ def rating(user_id, cb_id):
                 try: 
                     db.session.add(rating)
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except: 
                     return 'Something went wrong'
         elif "rate-5" in request.form:
@@ -502,7 +517,8 @@ def rating(user_id, cb_id):
                 rate.rating = 5
                 try:
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except:
                     return "Error rating"
             else:
@@ -510,7 +526,8 @@ def rating(user_id, cb_id):
                 try: 
                     db.session.add(rating)
                     db.session.commit()
-                    return redirect('/recbuild/')
+                    #return redirect('/recbuild/')
+                    return redirect(url_for('recbuild', count_1=count_1, count_2=count_2, count_3=count_3, count_4=count_4, count_5=count_5))
                 except: 
                     return 'Something went wrong'
 
