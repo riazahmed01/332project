@@ -825,8 +825,11 @@ def user():
             comment_l_name = request.form['comment_l_name']
             comment_email = request.form['comment_email']
             user_comment = request.form['comment']
-            
+
             if comment_f_name and comment_l_name and comment_email and user_comment:
+                new_concern = Comments(text=user_comment, date_registered=current_user.date_registered, user_id=current_user.id, product_id=0)
+                db.session.add(new_concern)
+                db.session.commit()
                 return "Concerns Reported Successfully"
             if new_email:
                 if len(new_email) < 4:
