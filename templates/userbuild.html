@@ -18,37 +18,21 @@
         <h1>User Reccomended Builds</h1>
     </div>
     <!-- loop this div for every new build-->
+    {% for build in builds %}
     <div class="createItems">
-        <h1>User's Build</h1>
-        <p id="item-list">List all tiems, Ex: Intel i9 13900k, NZXT Z790, Corsair Dominator DDR5, MSI RTX 4090...</p>
-        <h1 id="Price">Price: $99.99</h1>
-        <button id="view-item">View Build</button>
-        <button id="add-item">Add to Cart</button>
+        <h1>{{ build.name }}</h1>
+        <p id="item-list">{{ build.category }}</p>
+        <h1 id="Price">Price: ${{ build.price }}</h1>
+        <form method="POST">
+            <input type="hidden" name="build_id" value="{{ build.id }}">
+            <button name="view-item">View Build</button>
+        </form>
+        <form method="POST">
+            <input type="hidden" name="build_id" value="{{ build.id }}">
+            <button name="add-item">Add to Cart</button>
+        </form>
+        
     </div>
-
-    <div class="createItems">
-        <h1>User's Build</h1>
-        <p id="item-list">List all tiems, Ex: Intel i9 13900k, NZXT Z790, Corsair Dominator DDR5, MSI RTX 4090...</p>
-        <h1 id="Price">Price: $99.99</h1>
-        <button id="view-item">View Build</button>
-        <button id="add-item">Add to Cart</button>
-    </div>
-
-    <div class="createItems">
-        <h1>User's Build</h1>
-        <p id="item-list">List all tiems, Ex: Intel i9 13900k, NZXT Z790, Corsair Dominator DDR5, MSI RTX 4090...</p>
-        <h1 id="Price">Price: $99.99</h1>
-        <button id="view-item">View Build</button>
-        <button id="add-item">Add to Cart</button>
-    </div>
-
-    <div class="createItems">
-        <h1>User's Build</h1>
-        <p id="item-list">List all tiems, Ex: Intel i9 13900k, NZXT Z790, Corsair Dominator DDR5, MSI RTX 4090...</p>
-        <h1 id="Price">Price: $99.99</h1>
-        <button id="view-item">View Build</button>
-        <button id="add-item">Add to Cart</button>
-    </div>
-
+    {% endfor %}
 </div>
 {% endblock %}

@@ -950,19 +950,21 @@ def review(id):
 ####################### Costum Builds #############################
 @app.route("/initcb/", methods=["GET", "POST"])
 def initcb():
-    if request.method == "POST":
-        category = request.form["option"]
-        name = request.form["title"]
-        new_cb = CustomBuild(
-            creator_id=current_user.id, name=name, build_type=category
-        )
-        try:
-            db.session.add(new_cb)
-            db.session.commit()
-            return redirect(url_for("createbuild", id=new_cb.id))
-        except:
-            return "Something went wrong"
-    return render_template("initcb.html")
+    if current_user.is_authenticated:
+        if request.method == "POST":
+            category = request.form["option"]
+            name = request.form["title"]
+            new_cb = CustomBuild(
+                creator_id=current_user.id, name=name, build_type=category
+            )
+            try:
+                db.session.add(new_cb)
+                db.session.commit()
+                return redirect(url_for("createbuild", id=new_cb.id))
+            except:
+                return "Something went wrong"
+        return render_template("initcb.html")
+    else: return redirect('/login/')
 
 @app.route('/deletepart/<int:id>/<string:type>', methods=['POST', 'GET'])
 def deletepart(id,type):
@@ -1281,13 +1283,54 @@ def get_price(products, m2_q, ssd_hdd_q):
 # route recommended custombuilds page
 @app.route("/recbuild/")
 def recbuild():
-    builds = CustomBuild.query.all()
-    return render_template("recbuild.html", builds=builds)
+    if current_user.is_authenticated:
+        cu = User.query.filter_by(user_type='EMPLY')
+        builds = CustomBuild.query.all()
+        cu_builds=[]
+        for build in builds:
+            if builds.user_id == cu.id:
+                cu_builds.append(build)
+        return render_template("recbuild.html", builds=cu_builds)
+    else: 
+        return redirect('/login')
+
+@app.route('/viewbuild/<int:id>/')
+def viewbuild(id):
+    cb = CustomBuild.query.get(id)
+    cpu = Product.query.get(cb.cpu_id)
+    cooling = Product.query.get(cb.cooler_id)
+    mb=Product.query.get(cb.motherboard_id)
+    memory = Product.query.get(cb.RAM_id)
+    m2 = Product.query.get(cb.m2_id)
+    ssd_hdd = Product.query.get(cb.ssd_hdd_drive_id)
+    gpu=Product.query.get(cb.GPU_id)
+    psu = Product.query.get(cb.PSU_id)
+    case= Product.query.get(cb.case_id)
+    return render_template("viewbuild.html", build=cb, cpu=cpu,cooling=cooling,
+                               motherboard=mb,memory=memory,m2=m2,ssd_hdd=ssd_hdd,gpu = gpu, psu=psu,
+                               case=case, power=cb.power)
 
 # route user custombuilds page
-@app.route("/userbuild/")
+@app.route("/userbuild/", methods=["POST", "GET"])
 def userbuild():
-    return render_template("userbuild.html")
+    if current_user.is_authenticated:
+        if request.method == 'POST':
+            if 'add-item' in request.form:
+                id = request.form['build_id']
+                return redirect(url_for('addcart', cb_id=id, post=1))
+            elif 'view-item' in request.form:
+                id = request.form['build_id']
+                return redirect(url_for('viewbuild', cb_id=id))
+
+        cu = User.query.filter_by(user_type='CU').all()
+        cu_builds = []
+        for user in cu:
+            builds = CustomBuild.query.filter_by(creator_id=user.id).all()
+            cu_builds.extend(builds)
+
+        return render_template("userbuild.html", builds=cu_builds)
+    else:
+        return redirect('/login')
 
 
 def check_cpu_compatibility(cpu, motherboard):
@@ -1320,7 +1363,7 @@ def check_motherboard_cpu(motherboard, cpu):
 
 def check_motherboard_memory(motherboard, memory):
     if memory:
-        motherboard_specs = Specs.query.filter_by(product_id=motherboard).first()
+        motherboard_specs = Specs.query.filter_by(product_id=motherboard.id).first()
         memory_specs = Specs.query.filter_by(product_id=memory).first()
         if motherboard_specs.memory_type == memory_specs.memory_type and motherboard_specs.memory_slots >= memory_specs.memory_slots:
             return "Okay"
