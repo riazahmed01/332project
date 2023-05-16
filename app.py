@@ -207,7 +207,7 @@ def memory():
 # route storage page
 @app.route("/storage/")
 def storage():
-    storage_products = Product.query.filter(or_(Product.type_name == 'm2', Product.type_name == 'ssd_hard_drive')).all()
+    storage_products = Product.query.filter(or_(Product.type_name == 'm2', Product.type_name == 'ssd_hdd_drive')).all()
     return render_template("pcproducts.html", products=storage_products)
   
 # route psu page
