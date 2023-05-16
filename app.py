@@ -1284,13 +1284,9 @@ def get_price(products, m2_q, ssd_hdd_q):
 @app.route("/recbuild/")
 def recbuild():
     if current_user.is_authenticated:
-        cu = User.query.filter_by(user_type='EMPLY')
+       
         builds = CustomBuild.query.all()
-        cu_builds=[]
-        for build in builds:
-            if builds.user_id == cu.id:
-                cu_builds.append(build)
-        return render_template("recbuild.html", builds=cu_builds)
+        return render_template("recbuild.html", builds=builds)
     else: 
         return redirect('/login')
 
@@ -1326,7 +1322,7 @@ def userbuild():
         cu_builds = []
         for user in cu:
             builds = CustomBuild.query.filter_by(creator_id=user.id).all()
-            cu_builds.extend(builds)
+            cu_builds.append(builds)
 
         return render_template("userbuild.html", builds=cu_builds)
     else:
