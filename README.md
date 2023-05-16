@@ -24,8 +24,8 @@ This is a Flask based web-application that features a store and pc building with
 
 
 3. To be implemented:
-    - After making a successful purchase, the customer can rate the (1 worst, 5 best) configuration. -For any configuration receiving more than 3 highest ratings and no worst ones, the employee or the contributed customer who set it up will receive a “compliment”; 
-    - for more than 3 lowest rations and no highest ones, the related party received a “warning”. 
+    - After making a successful purchase, the customer can rate the (1 worst, 5 best) configuration. -For any configuration receiving more than 3 highest ratings and no worst ones, the employee or the contributed customer who set it up will receive a “compliment”. 
+    - for more than 3 lowest ratings and no highest ones, the related party received a “warning”. 
     - The customer can communicate with store employees about any concerns over the purchase, and afterward, the customer can complain or compliment the employee to the store owner with justifications. The store employee can complain, or compliment the customer as well, the store owner will process the compliment/complaint by issuing a possibly different number of “compliments” or “warning” to the employee or customer, e.g., a very bad behavior may receive 3 warnings to severely punish the party.
     - Any computer configuration receiving the worst ratings will be removed and the one who set it up (employee or customer) received one warning. Conversely, anyone receiving the best ratings will be put on the top page of the store and the one who set it up received a compliment.
     - Any comments or communications of the system among visitors, customers, and employees should go thru a language checking. Visitor's comments with these words will be deleted immediately and not be shown at all, whereas others will receive a warning. if more than 3 taboo words present in one message, 2 warnings will be issued and the message is not shown.
