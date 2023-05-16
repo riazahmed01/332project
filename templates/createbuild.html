@@ -139,7 +139,9 @@
         {% if gpu %}
         
         <div class="productInf">
+            {% if gpu.image %}
             <img src="{{ url_for('static', filename='assets/desktop.jpg') }}">
+            {% endif %}
             <p id="name">{{ gpu.name }}</p>
         </div>
         <p>Price: ${{ gpu.price }}</p>
