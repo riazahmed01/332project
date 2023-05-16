@@ -99,7 +99,13 @@
         <p>Price: ${{ m2.price }}</p>
         <a href="{{ url_for('deletepart', id=build.id, type='m2') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
         <div class="modify-q">
-            
+            {% if motherboard %}
+            <form method="POST" action="{{ url_for('changequantity', product_id=m2.id, cb_id=build.id, mb_id=motherboard.id) }}">
+                <button name="add1">+</button>
+                <p>{{ build.m2_quantity }}</p>
+                <button name="remove1">-</button>
+            </form>
+            {% endif %}
         </div>
         {% else %}
         <a href="{{ url_for('addpart', id=build.id, type='m2') }}" style="color:rgb(25, 24, 24)">Add M.2 Storage</a>
@@ -113,6 +119,15 @@
         </div>
         <p>Price: ${{ ssd_hdd.price }}</p>
         <a href="{{ url_for('deletepart', id=build.id, type='ssd_hdd_drive') }}" style="color:rgb(25, 24, 24)">Delete Product</a>
+        <div class="modify-q">
+            {% if motherboard %}
+            <form method="POST" action="{{ url_for('changequantity', product_id=ssd_hdd.id, cb_id=build.id, mb_id=motherboard.id) }}">
+                <button name="add1">+</button>
+                <p>{{ build.ssd_hdd_drive_quantity }}</p>
+                <button name="remove1">-</button>
+            </form>
+            {% endif %}
+        </div>
         {% else %}
         <a href="{{ url_for('addpart', id=build.id, type='ssd_hdd_drive') }}" style="color:rgb(25, 24, 24)">Add SSD/HDD Storage</a>
         {% endif %}
@@ -176,10 +191,12 @@
         <h1>Compatibility:</h1>
         {% if compatibility=='Okay' %}
         <div class="compItem1"> <p>Good: no issues found</p></div>
-        {% elif compatibility=='BIOS' %}
+        {% elif compatibility=='Bios' %}
         <div class="compItem2"> <p>Warning: may require bios update</p></div>
         {% elif compatibility=='Error' %}
         <div class="compItem3"> <p>Issue: issue detected. One or more items may be out of stock or are not compatible</p></div>
+        {% elif compatibility=='Power' %}
+        <div class="compItem3"> <p>Issue: issue detected. Power out of PSU capacities</p></div>
         {% else %}
         {% endif %}
     </div>
