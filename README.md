@@ -4,7 +4,7 @@ This is a Flask based web-application that features a store and pc building with
 ## Implemented features:
 
 4 types of users: 
-[x]store owners (admin)
-[x] store employees
-[x] customers
-[x] visitors
+-[x]store owners (admin)
+-[x] store employees
+-[x] customers
+-[x] visitors
