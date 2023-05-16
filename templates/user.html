@@ -164,6 +164,30 @@
         <input type="submit" value="Update" />
       </form>
     </div>
+
+    <div class = customer-service>
+      <H2>
+        Customer Service
+      </H2>
+      <div class="container">
+        <form id="customerServiceForm">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="comment_f_name" name="comment_f_name" required>
+    
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="comment_l_name" name="comment_l_name" required>
+    
+          <label for="email">Email:</label>
+          <input type="email" id="comment_email" name="comment_email" required>
+    
+          <label for="comment">Comment:</label>
+          <textarea id="comment" name="comment" required></textarea>
+          <form method = POST>
+            <button type="submit">Submit</button>
+          </form>
+        </form>
+    </div> 
+    </div>
   </div>
 </div>
 {% endblock %}

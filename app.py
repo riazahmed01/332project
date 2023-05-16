@@ -649,6 +649,13 @@ def user():
             new_password2 = request.form['password2']
             new_address = request.form['address']
             new_phonenumber = request.form['phone']
+            comment_f_name = request.form['comment_f_name']
+            comment_l_name = request.form['comment_l_name']
+            comment_email = request.form['comment_email']
+            user_comment = request.form['comment']
+            
+            if comment_f_name and comment_l_name and comment_email and user_comment:
+                return "Concerns Reported Successfully"
             if new_email:
                 if len(new_email) < 4:
                     return 'Email must be at least 3 characters'
