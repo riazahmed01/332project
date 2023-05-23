@@ -31,8 +31,11 @@
 
 <div class="text">
     <h1>
-        
+        {% if user.is_authenticated %}
+        Hello {{ user.f_name }} {{ user.l_name }}
+        {% else %}
         Hello Gamers!
+        {% endif %}
 
     </h1>
 </div>

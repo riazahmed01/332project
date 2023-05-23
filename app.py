@@ -165,7 +165,7 @@ class Rating(db.Model):
 # route home/index page
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", user=current_user)
 
 # route custom builds page
 @app.route("/custombuilds/")
